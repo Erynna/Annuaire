@@ -8,7 +8,6 @@ public class InternProfile {
 	private String promotion;
 	private int studyYear;
 	
-	
 	public InternProfile() {
 		super();
 	}

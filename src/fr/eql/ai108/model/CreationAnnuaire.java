@@ -29,7 +29,7 @@ public class CreationAnnuaire {
 				
 				InternProfile internProfile = new InternProfile();
 				
-				for (int i = 0; i < 5; i++) {
+				for (int i = 0; i < 5; i++) {      //Parcourir chacune des 5 lignes qui composent l'internProfile (profil du stagiaire)
 					
 					switch (i) {
 					case 0:
