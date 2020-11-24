@@ -1,17 +1,26 @@
 package fr.eql.ai108.model;
 
+
+/*
+ * Classe qui permet de créer des objets de type InternProfile (i.e stagiaire), de leur ajouter un enfant, de 
+ * visualiser toute leur descendance.
+ */
 public class InternProfile {
 	
-	private String surname;
-	private String firstName;
-	private String county;
-	private String promotion;
-	private int studyYear;
+	private String surname;      		// nom de famille
+	private String firstName;			// prénom
+	private String county;				// département
+	private String promotion;			// nom de la promotion
+	private int studyYear;				// année de la promotion
+	private InternProfile leftChild;	// enfant gauche
+	private InternProfile rightChild;	// enfant droit
+	boolean isEmpty;					// permet de savoir si le stagiaire a déjà été renseigné
 	
 	public InternProfile() {
 		super();
+		isEmpty = true;
 	}
-
+	
 	public InternProfile(String surname, String firstName, String county, String promotion, int studyYear) {
 		super();
 		this.surname = surname;
@@ -19,6 +28,65 @@ public class InternProfile {
 		this.county = county;
 		this.promotion = promotion;
 		this.studyYear = studyYear;
+	}
+	
+	/*
+	 * Méthode qui permet d'ajouter un enfant à l'objet de la classe InternProfile.
+	 * @ param : un surname de type string, un firstName de type String, un county de type String, une promotion
+	 * de type String et un studyYear de type int. 
+	 */
+	public void addChild(String surname, String firstName, String county, String promotion, int studyYear) {
+		if (isEmpty) {
+			isEmpty = false;
+			this.surname = surname;
+			this.firstName = firstName;
+			this.county = county;
+			this.promotion = promotion;
+			this.studyYear = studyYear;
+			leftChild = new InternProfile();
+			rightChild = new InternProfile();
+		}
+		else if (surname.compareTo(this.surname)<0) {
+			leftChild.addChild(surname, firstName, county, promotion, studyYear);
+		}
+		else if (surname.compareTo(this.surname)>0) {
+			rightChild.addChild(surname, firstName, county, promotion, studyYear);
+		}
+		else {
+			if (firstName.compareTo(firstName)<0) {
+				leftChild.addChild(surname, firstName, county, promotion, studyYear);
+			}
+			else if (firstName.compareTo(firstName)>=0) {
+				leftChild.addChild(surname, firstName, county, promotion, studyYear);
+			}
+		}
+	}
+	
+	/*
+	 * Méthode qui permet de visualiser tous les descendants du stagiaire.
+	 */
+	public void printDescendants() {
+		if(!isEmpty) {
+			leftChild.printDescendants();
+			System.out.println(toString());
+			rightChild.printDescendants();
+		}
+	}
+
+	public InternProfile getLeftChild() {
+		return leftChild;
+	}
+
+	public void setLeftChild(InternProfile leftChild) {
+		this.leftChild = leftChild;
+	}
+
+	public InternProfile getRightChild() {
+		return rightChild;
+	}
+
+	public void setRightChild(InternProfile rightChild) {
+		this.rightChild = rightChild;
 	}
 
 	@Override

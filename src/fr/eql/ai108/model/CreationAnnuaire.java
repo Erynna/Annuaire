@@ -6,21 +6,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Classe utilitaire qui permet d'extraire ligne à ligne des données d'un fichier texte pour en faire des stagiaires 
+ * qui s'inscrivent dans un arbre de stagiaires.
+ */
 public class CreationAnnuaire {
 
-	private static String originalFilePath = "./stagiaires.txt";
-	private static String internBDD = "./internBDD.bin";
+	private final String originalFilePath = "./stagiaires.txt";
+	private final String internBDD = "./internBDD.bin";
 
 	public CreationAnnuaire() {
 		super();
 	}
 
-	public List<InternProfile> extractInternDatas() {
+	/*
+	 * méthode qui crée un arbre binaire à partir du fichier dont le chemin est renseigné dans la variable originalFilePath.
+	 * Le premier stagiaire extrait du fichier constitue le stagiaire racine (le "patriarche"). Chaque stagiaire qui est ensuite 
+	 * extrait du fichier est ajouté à la descendance de la racine au fur et à mesure de la lecture du fichier source.
+	 * @ return : un objet de type InternProfile qui contient dans ses propriétés leftChild et rightChild toute sa descendance.
+	 */
+	public InternProfile createTree() {
 
 		BufferedReader br = null;
-		
-		List<InternProfile> internProfiles = new ArrayList<InternProfile>();
-		
+		InternProfile internProfile = null;
 		try {
 			br = new BufferedReader(new FileReader(originalFilePath));
 			String line;
@@ -31,31 +39,35 @@ public class CreationAnnuaire {
 				
 				for (int i = 0; i < 5; i++) {      //Parcourir chacune des 5 lignes qui composent l'internProfile (profil du stagiaire)
 					
+				String surname = "";
+				String firstName = "";
+				String county = "";
+				String promotion = "";
+				int studyYear = 0;
+				//Parcourt chacune des 5 lignes pour en déduire le nom, le prénom, le département, la promotion et l'année 
+				//d'étude du stagiaire
+				for (int i = 0; i < 5; i++) {      
 					switch (i) {
 					case 0:
-						internProfile.setSurname(line.trim());
+						surname = line.trim();
 						break;
 					case 1:
-						internProfile.setFirstName(line.trim());
+						firstName = line.trim();
 						break;
 					case 2:
-						internProfile.setCounty(line.trim());
+						county = line.trim();
 						break;
 					case 3:
-						internProfile.setPromotion(line.trim());
+						promotion = line.trim();
 						break;
 					case 4:
-						internProfile.setStudyYear(Integer.parseInt(line.trim()));
-						break;
-					default:
+						studyYear = Integer.parseInt(line.trim());
 						break;
 					}
-					
 					line = br.readLine();
 				}
-				
-				internProfiles.add(internProfile);
-				
+				//Inscrit le stagiaire dans une lignée de stagiaires
+				internProfile.addChild(surname, firstName, county, promotion, studyYear);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -66,6 +78,43 @@ public class CreationAnnuaire {
 				e.printStackTrace();
 			}
 		}
-		return internProfiles;
+	return internProfile;	
+	}
+	
+	/*
+	 * Méthode qui permet de chercher, dans la descendance d'un InternProfile passé en argument, un InternProfile.
+	 * @param :  - internProfileFather : un objet de type InternProfile (pour une recherche complète, passer ici 
+	 * 				en argument l'InternProfile racine)
+	 * 			 - internProfile : un objet de type internProfile qu'on veut trouver dans la descendance du internProfileFather
+	 * @return : null si aucun objet trouvé sinon un objet de type InternProfile qui représente l'objet cherché 
+	 */
+	public InternProfile findInternProfile(InternProfile internProfileFather, InternProfile internProfile) {
+		//instanciation d'un objet InternProfileComparator pour comparer les 2 objets passés en argument
+		InternProfileComparator comparator = new InternProfileComparator();
+		int resultCompararison = comparator.compare(internProfile,internProfileFather);
+		switch (resultCompararison) {
+		//si le résultat de la comparaison =-1 (i.e l'objet internProfile est plus petit que internProfileFather), 
+		//on oriente la recherche sur l'enfant gauche
+		case -1:
+			if (internProfileFather.getLeftChild().isEmpty) {
+				return null;
+			}
+			else {
+				return findInternProfile(internProfileFather.getLeftChild(), internProfile);
+			}
+		//si le résultat de la comparaison =1 (i.e l'objet internProfile est plus grand que internProfileFather), 
+		//on oriente la recherche sur l'enfant droit
+		case 1:
+			if (internProfileFather.getRightChild().isEmpty) {
+				return null;
+			}
+			else {
+				return findInternProfile(internProfileFather.getRightChild(), internProfile);
+			}
+		//si le résultat de la comparaison n'est ni 1 ni -1, il est nécessairement =0. Cela signifie que l'objet internProfileFather
+		//est l'objet recherché. La méthode renvoie alors internProfileFather.
+		default:
+			return internProfileFather;
+		}
 	}
 }
