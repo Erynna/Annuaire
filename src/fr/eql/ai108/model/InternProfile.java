@@ -4,7 +4,7 @@ public class InternProfile {
 	
 	private String surname;
 	private String firstName;
-	private String county;
+	private int county;
 	private String promotion;
 	private int studyYear;
 	
@@ -12,7 +12,7 @@ public class InternProfile {
 		super();
 	}
 
-	public InternProfile(String surname, String firstName, String county, String promotion, int studyYear) {
+	public InternProfile(String surname, String firstName, int county, String promotion, int studyYear) {
 		super();
 		this.surname = surname;
 		this.firstName = firstName;
@@ -27,11 +27,13 @@ public class InternProfile {
 				+ promotion + ", studyYear=" + studyYear + "]";
 	}
 
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((county == null) ? 0 : county.hashCode());
+		result = prime * result + county;
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((promotion == null) ? 0 : promotion.hashCode());
 		result = prime * result + studyYear;
@@ -48,10 +50,7 @@ public class InternProfile {
 		if (getClass() != obj.getClass())
 			return false;
 		InternProfile other = (InternProfile) obj;
-		if (county == null) {
-			if (other.county != null)
-				return false;
-		} else if (!county.equals(other.county))
+		if (county != other.county)
 			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
@@ -85,12 +84,6 @@ public class InternProfile {
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	public String getCounty() {
-		return county;
-	}
-	public void setCounty(String county) {
-		this.county = county;
-	}
 	public String getPromotion() {
 		return promotion;
 	}
@@ -103,4 +96,11 @@ public class InternProfile {
 	public void setStudyYear(int studyYear) {
 		this.studyYear = studyYear;
 	}
+	public int getCounty() {
+		return county;
+	}
+	public void setCounty(int county) {
+		this.county = county;
+	}
+	
 }

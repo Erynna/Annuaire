@@ -18,7 +18,6 @@ public class CreationAnnuaire {
 	public List<InternProfile> extractInternDatas() {
 
 		BufferedReader br = null;
-		
 		List<InternProfile> internProfiles = new ArrayList<InternProfile>();
 		
 		try {
@@ -29,8 +28,7 @@ public class CreationAnnuaire {
 				
 				InternProfile internProfile = new InternProfile();
 				
-				for (int i = 0; i < 5; i++) {      //Parcourir chacune des 5 lignes qui composent l'internProfile (profil du stagiaire)
-					
+				for (int i = 0; i < 5; i++) {      //Parcourir chacune des 5 lignes qui composent l'internProfile (profil du stagiaire)	
 					switch (i) {
 					case 0:
 						internProfile.setSurname(line.trim());
@@ -39,7 +37,7 @@ public class CreationAnnuaire {
 						internProfile.setFirstName(line.trim());
 						break;
 					case 2:
-						internProfile.setCounty(line.trim());
+						internProfile.setCounty(Integer.parseInt(line.trim()));
 						break;
 					case 3:
 						internProfile.setPromotion(line.trim());
@@ -50,12 +48,9 @@ public class CreationAnnuaire {
 					default:
 						break;
 					}
-					
 					line = br.readLine();
 				}
-				
 				internProfiles.add(internProfile);
-				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
