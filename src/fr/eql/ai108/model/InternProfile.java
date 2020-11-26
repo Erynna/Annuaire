@@ -73,22 +73,6 @@ public class InternProfile {
 		}
 	}
 
-	public InternProfile getLeftChild() {
-		return leftChild;
-	}
-
-	public void setLeftChild(InternProfile leftChild) {
-		this.leftChild = leftChild;
-	}
-
-	public InternProfile getRightChild() {
-		return rightChild;
-	}
-
-	public void setRightChild(InternProfile rightChild) {
-		this.rightChild = rightChild;
-	}
-
 	@Override
 	public String toString() {
 		return "InternProfile [surname=" + surname + ", firstName=" + firstName + ", county=" + county + ", promotion="
@@ -144,31 +128,57 @@ public class InternProfile {
 	public String getSurname() {
 		return surname;
 	}
+
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
 	public String getCounty() {
 		return county;
 	}
+
 	public void setCounty(String county) {
 		this.county = county;
 	}
+
 	public String getPromotion() {
 		return promotion;
 	}
+
 	public void setPromotion(String promotion) {
 		this.promotion = promotion;
 	}
+
 	public int getStudyYear() {
 		return studyYear;
 	}
+
 	public void setStudyYear(int studyYear) {
 		this.studyYear = studyYear;
 	}
+
+	public InternProfile getLeftChild() {
+		return leftChild;
+	}
+
+	public void setLeftChild(InternProfile leftChild) {
+		this.leftChild = leftChild;
+	}
+
+	public InternProfile getRightChild() {
+		return rightChild;
+	}
+
+	public void setRightChild(InternProfile rightChild) {
+		this.rightChild = rightChild;
+	}
+
 }

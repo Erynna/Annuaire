@@ -44,7 +44,6 @@ public class TestApp {
 			System.out.println(" a pour enfant gauche "+annuaire.findInternProfile(arbre, titi).getLeftChild());
 			System.out.println(" et pour enfant droit "+annuaire.findInternProfile(arbre, toto).getRightChild());
 		}
-		
 	}
 
 }

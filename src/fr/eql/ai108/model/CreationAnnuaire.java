@@ -1,8 +1,10 @@
 package fr.eql.ai108.model;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
 public class CreationAnnuaire {
 
 	private final String originalFilePath = "./stagiaires.txt";
-	private final String internBDD = "./internBDD.bin";
+	private final String internBDDPath = "./internBDD.bin";
 
 	public CreationAnnuaire() {
 		super();
@@ -29,16 +31,14 @@ public class CreationAnnuaire {
 
 		BufferedReader br = null;
 		InternProfile internProfile = null;
+
 		try {
 			br = new BufferedReader(new FileReader(originalFilePath));
 			String line;
 			
 			while ((line = br.readLine()) != null) { 
 				
-				InternProfile internProfile = new InternProfile();
-				
-				for (int i = 0; i < 5; i++) {      //Parcourir chacune des 5 lignes qui composent l'internProfile (profil du stagiaire)
-					
+				internProfile = new InternProfile();
 				String surname = "";
 				String firstName = "";
 				String county = "";
@@ -117,4 +117,93 @@ public class CreationAnnuaire {
 			return internProfileFather;
 		}
 	}
+	
+	public void createInternsBDDFile() {
+
+		//Créer le fichier de BDD au même endroit que le fichier stagiaire.txt
+		File internsBDD = new File(internBDDPath);
+		RandomAccessFile raf = null;
+		Byte leftChildPosition;
+		Byte rightChildPosition;
+
+		try {
+			internsBDD.createNewFile();
+			raf = new RandomAccessFile(internsBDD, "rw");
+
+			//Récupérer le profil stagiaire parent racine (median de notre liste)
+
+
+			//RECURCIVITE : Pour chaque Profil de stagiaire récupérer ses profil stagiaires enfants
+			//writeChildrenInterns(lucien, raf);
+			
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private String concatenateInternDatas(InternProfile internProfile) {
+
+		return (internProfile.getSurname() + "_" + internProfile.getFirstName() 
+		+ "_" + internProfile.getCounty() + "_" + internProfile.getPromotion() 
+		+ "_" + internProfile.getStudyYear());
+
+	}
+
+	private void writeChildrenInterns(InternProfile internProfile, RandomAccessFile raf) {
+
+		InternProfile leftChild = internProfile.getLeftChild();
+		InternProfile rightChild = internProfile.getRightChild();
+		int leftChildPosition = 0;
+		int rightChildPosition = 0;
+		long parentPosition = 0;
+
+		try {
+			
+			
+			raf.writeBytes(internProfile.getFirstName());								//Traitement
+			
+			if(leftChild != null && rightChild == null){								//Recursivité à Gauche
+
+				leftChildPosition = (int) raf.getFilePointer();
+				raf.writeInt(leftChildPosition);
+				writeChildrenInterns(leftChild, raf);
+
+			}else {
+				
+				leftChildPosition = (int) raf.getFilePointer();
+				raf.writeInt(leftChildPosition);
+				raf.writeInt(0);
+				raf.writeBytes(";");
+				writeChildrenInterns(leftChild, raf);
+				
+			}
+			
+			if(rightChild != null) {													//Recursivité à Droite
+
+				writeChildrenInterns(rightChild, raf);
+
+			}
+			
+			if (leftChild == null && rightChild == null) {
+				
+				raf.writeInt(0);
+				raf.writeInt(0);
+				raf.writeBytes(";");
+				
+			}
+		
+			
+
+
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 }
