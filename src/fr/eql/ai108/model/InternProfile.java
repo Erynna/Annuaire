@@ -7,18 +7,23 @@ public class InternProfile {
 	private int county;
 	private String promotion;
 	private int studyYear;
+	private InternProfile leftChild;
+	private InternProfile rightChild;
 	
 	public InternProfile() {
 		super();
 	}
 
-	public InternProfile(String surname, String firstName, int county, String promotion, int studyYear) {
+	public InternProfile(String surname, String firstName, String county, String promotion, int studyYear,
+			InternProfile leftChild, InternProfile rightChild) {
 		super();
 		this.surname = surname;
 		this.firstName = firstName;
 		this.county = county;
 		this.promotion = promotion;
 		this.studyYear = studyYear;
+		this.leftChild = leftChild;
+		this.rightChild = rightChild;
 	}
 
 	@Override
@@ -27,13 +32,11 @@ public class InternProfile {
 				+ promotion + ", studyYear=" + studyYear + "]";
 	}
 
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + county;
+		result = prime * result + ((county == null) ? 0 : county.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((promotion == null) ? 0 : promotion.hashCode());
 		result = prime * result + studyYear;
@@ -50,7 +53,10 @@ public class InternProfile {
 		if (getClass() != obj.getClass())
 			return false;
 		InternProfile other = (InternProfile) obj;
-		if (county != other.county)
+		if (county == null) {
+			if (other.county != null)
+				return false;
+		} else if (!county.equals(other.county))
 			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
@@ -75,32 +81,57 @@ public class InternProfile {
 	public String getSurname() {
 		return surname;
 	}
+
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
+	public String getCounty() {
+		return county;
+	}
+
+	public void setCounty(String county) {
+		this.county = county;
+	}
+
 	public String getPromotion() {
 		return promotion;
 	}
+
 	public void setPromotion(String promotion) {
 		this.promotion = promotion;
 	}
+
 	public int getStudyYear() {
 		return studyYear;
 	}
+
 	public void setStudyYear(int studyYear) {
 		this.studyYear = studyYear;
 	}
-	public int getCounty() {
-		return county;
+
+	public InternProfile getLeftChild() {
+		return leftChild;
 	}
-	public void setCounty(int county) {
-		this.county = county;
+
+	public void setLeftChild(InternProfile leftChild) {
+		this.leftChild = leftChild;
 	}
-	
+
+	public InternProfile getRightChild() {
+		return rightChild;
+	}
+
+	public void setRightChild(InternProfile rightChild) {
+		this.rightChild = rightChild;
+	}
+
 }
