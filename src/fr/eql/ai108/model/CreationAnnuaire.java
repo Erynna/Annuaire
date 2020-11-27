@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /*
- * Classe utilitaire qui permet d'extraire ligne à ligne des donnàes d'un fichier texte pour en faire des stagiaires 
+ * Classe utilitaire qui permet d'extraire ligne à ligne des données d'un fichier texte pour en faire des stagiaires 
  * qui s'inscrivent dans un arbre de stagiaires.
  */
 public class CreationAnnuaire {
