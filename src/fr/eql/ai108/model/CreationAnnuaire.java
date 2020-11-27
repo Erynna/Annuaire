@@ -35,10 +35,8 @@ public class CreationAnnuaire {
 		try {
 			br = new BufferedReader(new FileReader(originalFilePath));
 			String line;
-			
+			internProfile = new InternProfile();
 			while ((line = br.readLine()) != null) { 
-				
-				internProfile = new InternProfile();
 				String surname = "";
 				String firstName = "";
 				String county = "";
