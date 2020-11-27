@@ -1,51 +1,86 @@
 package fr.eql.ai108.model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InternProfileDao {
+
+	private String internBDD = "test.bin";
 	
-	private String internBDD = "./internBDD.bin";
-	
-	//Méthode pour récupérer les données d'un stagiaire
-	private InternProfile stringToIP(String line) {
-		String[] info = line.split("");		//Ajouter le caractère choisi pour séparer les infos d'un stagiaire
-		InternProfile internProfile = new InternProfile(info[0], info[1], info[2], info[3], Integer.parseInt(info[4])); // promotion string ou integer ?
+	private InternProfileAj stringToIP2(String stagiaire) {
+		String[] info = stagiaire.split("_");		
+		InternProfileAj internProfile = new InternProfileAj(info[0], info[1], info[2], info[3], Integer.parseInt(info[4]));
 		return internProfile;
 	}
 	
-	//Lecture du fichier et instanciation d'objet internprofil
-	public  List<InternProfile> getAll() {
+	private InternPositionAj stringToPos(String pos) {
+		String[] infoPos = pos.split(",");
+		InternPositionAj internPosition = new InternPositionAj(Integer.parseInt(infoPos[0]), Integer.parseInt(infoPos[1]));
+		return internPosition;
+	}
+	
+	public List<InternProfile> getAll() {
+		//List<InternPositionAj> interns = new ArrayList<InternPositionAj>();
 		List<InternProfile> internProfiles = new ArrayList<InternProfile>();
-		FileReader fr = null;
-		BufferedReader br = null;
+		
+		//String txt;
+		//String txtPos = "";
+		RandomAccessFile raf = null;
+		int cursorPosition=0;
+		//long pp = 0;
+		//long posDeb = 0;
 		try {
-			fr = new FileReader(internBDD);
-			br = new BufferedReader(fr);
-			String line = "";
-			while((line = br.readLine()) != null) {
-				InternProfile internProfile = stringToIP(line);
-				internProfiles.add(internProfile);
-			}
+			//Lecture du fichier binaire et conversion en string
+			raf = new RandomAccessFile(internBDD, "r");
+			//raf.seek(0 + pp);
+			raf.seek(cursorPosition);
+			if(raf.readLine() != ";") {	
+			}else {
+				pp = raf.getFilePointer();				//Position du pointeur quant ;
+			//Test ?
+				System.out.println("pointeur ; " + raf.getFilePointer());
+				System.out.println(pp);
+				
+				if(raf.readLine() != "/") {
+				}else {
+					long p = raf.getFilePointer();		//Position du pointeur /
+			//Test ?		
+					System.out.println("pointeur / " + raf.getFilePointer());
+					System.out.println(p);
+					
+					//Lire du deb Ã  la position de / et mettre dans une string
+					for (long i = 0; i < p; i++) {
+						txt = raf.readLine();
+						//Position et rÃ©cupÃ©ration des positions
+							for (long i1 = p + 1; i1 < pp; i1++) {
+								int txtPos1 = raf.readInt();
+								txtPos = Integer.toString(txtPos1); //A sup
+							}
+							//Instanciation d'un stagiaire et ajour dans la liste
+						InternProfileAj internProfileAj = stringToIP2(txt);
+						InternPositionAj internPosition2 = stringToPos(txtPos);
+						InternPositionAj newIntern = new InternPositionAj(internProfileAj.getSurname(), internProfileAj.getFirstName(), internProfileAj.getCounty(), internProfileAj.getPromotion(), internProfileAj.getStudyYear(), internPosition2.getLeftChildPosition(), internPosition2.getRightChildPosition());
+						
+						interns.add(newIntern);
+					}
+				}
+			}		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
-				br.close();
-				fr.close();
+				raf.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return internProfiles;
+		return interns;
 	}
 	
 	
 	
-
 }

@@ -1,20 +1,19 @@
 package fr.eql.ai108.model;
 
-
 /*
- * Classe qui permet de cr�er des objets de type InternProfile (i.e stagiaire), de leur ajouter un enfant, de 
+ * Classe qui permet de créer des objets de type InternProfile (i.e stagiaire), de leur ajouter un enfant, de 
  * visualiser toute leur descendance.
  */
 public class InternProfile {
 	
 	private String surname;      		// nom de famille
-	private String firstName;			// pr�nom
-	private String county;				// d�partement
+	private String firstName;			// prénom
+	private String county;				// département
 	private String promotion;			// nom de la promotion
-	private int studyYear;				// ann�e de la promotion
+	private int studyYear;				// année de la promotion
 	private InternProfile leftChild;	// enfant gauche
 	private InternProfile rightChild;	// enfant droit
-	boolean isEmpty;					// permet de savoir si le stagiaire a d�j� �t� renseign�
+	boolean isEmpty;					// permet de savoir si le stagiaire a déjé été renseigné
 	
 	public InternProfile() {
 		super();
@@ -29,9 +28,9 @@ public class InternProfile {
 		this.promotion = promotion;
 		this.studyYear = studyYear;
 	}
-	
+
 	/*
-	 * M�thode qui permet d'ajouter un enfant � l'objet de la classe InternProfile.
+	 * Méthode qui permet d'ajouter un enfant é l'objet de la classe InternProfile.
 	 * @ param : un surname de type string, un firstName de type String, un county de type String, une promotion
 	 * de type String et un studyYear de type int. 
 	 */
@@ -63,7 +62,7 @@ public class InternProfile {
 	}
 	
 	/*
-	 * M�thode qui permet de visualiser tous les descendants du stagiaire.
+	 * Méthode qui permet de visualiser tous les descendants du stagiaire.
 	 */
 	public void printDescendants() {
 		if(!isEmpty) {
@@ -71,6 +70,35 @@ public class InternProfile {
 			System.out.println(toString());
 			rightChild.printDescendants();
 		}
+	}
+	
+	/*
+	 * Méthode qui permet par récursivité de récupérer la taille de l'ensemble des informations des enfants de l'éléments courant
+	 */
+	public int getSizeOfWholeChildren() {
+		int size = 0;
+		
+		if(!isEmpty) {
+			size += getDatasSize();
+			size += leftChild.getSizeOfWholeChildren();
+			size += rightChild.getSizeOfWholeChildren();
+		}
+		
+		return size;
+	}
+	
+	/*
+	 * Méthode qui permet de récupérer la taille des informations concaténées pour le stagiaire concerné
+	 */
+	public int getDatasSize() {
+		
+		int size;
+		int numberOfSeparators = 5;					//Séparateurs entre chaque information stagiaire
+		int numberOfPositionBytes = 9;				// 8 Octets servant à stocker les info des enfants gauches et droits + 1 octet pour le separateur final
+		
+		size = surname.length() + firstName.length() + county.length() + promotion.length() + String.valueOf(studyYear).length() + numberOfSeparators + numberOfPositionBytes;
+		
+		return size;
 	}
 
 	@Override

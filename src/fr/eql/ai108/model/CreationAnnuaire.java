@@ -5,11 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
- * Classe utilitaire qui permet d'extraire ligne � ligne des donn�es d'un fichier texte pour en faire des stagiaires 
+ * Classe utilitaire qui permet d'extraire ligne à ligne des données d'un fichier texte pour en faire des stagiaires 
  * qui s'inscrivent dans un arbre de stagiaires.
  */
 public class CreationAnnuaire {
@@ -22,10 +20,10 @@ public class CreationAnnuaire {
 	}
 
 	/*
-	 * m�thode qui cr�e un arbre binaire � partir du fichier dont le chemin est renseign� dans la variable originalFilePath.
+	 * Méthode qui crée un arbre binaire à partir du fichier dont le chemin est renseigné dans la variable originalFilePath.
 	 * Le premier stagiaire extrait du fichier constitue le stagiaire racine (le "patriarche"). Chaque stagiaire qui est ensuite 
-	 * extrait du fichier est ajout� � la descendance de la racine au fur et � mesure de la lecture du fichier source.
-	 * @ return : un objet de type InternProfile qui contient dans ses propri�t�s leftChild et rightChild toute sa descendance.
+	 * extrait du fichier est ajouté à la descendance de la racine au fur et à mesure de la lecture du fichier source.
+	 * @ return : un objet de type InternProfile qui contient dans ses propriétés leftChild et rightChild toute sa descendance.
 	 */
 	public InternProfile createTree() {
 
@@ -35,17 +33,18 @@ public class CreationAnnuaire {
 		try {
 			br = new BufferedReader(new FileReader(originalFilePath));
 			String line;
-			
+
+			internProfile = new InternProfile();
+
 			while ((line = br.readLine()) != null) { 
-				
-				internProfile = new InternProfile();
+
 				String surname = "";
 				String firstName = "";
 				String county = "";
 				String promotion = "";
 				int studyYear = 0;
-				//Parcourt chacune des 5 lignes pour en d�duire le nom, le pr�nom, le d�partement, la promotion et l'ann�e 
-				//d'�tude du stagiaire
+				//Parcourt chacune des 5 lignes pour en déduire le nom, le prénom, le département, la promotion et l'année 
+				//d'étude du stagiaire
 				for (int i = 0; i < 5; i++) {      
 					switch (i) {
 					case 0:
@@ -66,7 +65,7 @@ public class CreationAnnuaire {
 					}
 					line = br.readLine();
 				}
-				//Inscrit le stagiaire dans une lign�e de stagiaires
+				//Inscrit le stagiaire dans une lignée de stagiaires
 				internProfile.addChild(surname, firstName, county, promotion, studyYear);
 			}
 		} catch (IOException e) {
@@ -78,22 +77,22 @@ public class CreationAnnuaire {
 				e.printStackTrace();
 			}
 		}
-	return internProfile;	
+		return internProfile;	
 	}
-	
+
 	/*
-	 * M�thode qui permet de chercher, dans la descendance d'un InternProfile pass� en argument, un InternProfile.
-	 * @param :  - internProfileFather : un objet de type InternProfile (pour une recherche compl�te, passer ici 
+	 * Méthode qui permet de chercher, dans la descendance d'un InternProfile passé en argument, un InternProfile.
+	 * @param :  - internProfileFather : un objet de type InternProfile (pour une recherche complète, passer ici 
 	 * 				en argument l'InternProfile racine)
 	 * 			 - internProfile : un objet de type internProfile qu'on veut trouver dans la descendance du internProfileFather
-	 * @return : null si aucun objet trouv� sinon un objet de type InternProfile qui repr�sente l'objet cherch� 
+	 * @return : null si aucun objet trouvé sinon un objet de type InternProfile qui représente l'objet cherché 
 	 */
 	public InternProfile findInternProfile(InternProfile internProfileFather, InternProfile internProfile) {
-		//instanciation d'un objet InternProfileComparator pour comparer les 2 objets pass�s en argument
+		//instanciation d'un objet InternProfileComparator pour comparer les 2 objets passés en argument
 		InternProfileComparator comparator = new InternProfileComparator();
 		int resultCompararison = comparator.compare(internProfile,internProfileFather);
 		switch (resultCompararison) {
-		//si le r�sultat de la comparaison =-1 (i.e l'objet internProfile est plus petit que internProfileFather), 
+		//si le résultat de la comparaison =-1 (i.e l'objet internProfile est plus petit que internProfileFather), 
 		//on oriente la recherche sur l'enfant gauche
 		case -1:
 			if (internProfileFather.getLeftChild().isEmpty) {
@@ -102,8 +101,8 @@ public class CreationAnnuaire {
 			else {
 				return findInternProfile(internProfileFather.getLeftChild(), internProfile);
 			}
-		//si le r�sultat de la comparaison =1 (i.e l'objet internProfile est plus grand que internProfileFather), 
-		//on oriente la recherche sur l'enfant droit
+			//si le résultat de la comparaison =1 (i.e l'objet internProfile est plus grand que internProfileFather), 
+			//on oriente la recherche sur l'enfant droit
 		case 1:
 			if (internProfileFather.getRightChild().isEmpty) {
 				return null;
@@ -111,44 +110,49 @@ public class CreationAnnuaire {
 			else {
 				return findInternProfile(internProfileFather.getRightChild(), internProfile);
 			}
-		//si le r�sultat de la comparaison n'est ni 1 ni -1, il est n�cessairement =0. Cela signifie que l'objet internProfileFather
-		//est l'objet recherch�. La m�thode renvoie alors internProfileFather.
+			//si le résultat de la comparaison n'est ni 1 ni -1, il est nécessairement = 0. Cela signifie que l'objet internProfileFather
+			//est l'objet recherché. La méthode renvoie alors internProfileFather.
 		default:
 			return internProfileFather;
 		}
 	}
+
 	
+	/*
+	 * Méthode qui permet récursivement de créer le fichier optimisé composé des informations stagiaires ainsi que les position des enfants gauches et droits
+	 */
 	public void createInternsBDDFile() {
 
-		//Créer le fichier de BDD au même endroit que le fichier stagiaire.txt
-		File internsBDD = new File(internBDDPath);
+		File internBDD = new File(internBDDPath);
 		RandomAccessFile raf = null;
-		Byte leftChildPosition;
-		Byte rightChildPosition;
 
 		try {
-			internsBDD.createNewFile();
-			raf = new RandomAccessFile(internsBDD, "rw");
-
-			//Récupérer le profil stagiaire parent racine (median de notre liste)
-
-
-			//RECURCIVITE : Pour chaque Profil de stagiaire récupérer ses profil stagiaires enfants
-			//writeChildrenInterns(lucien, raf);
 			
+			internBDD.createNewFile();
+			
+			raf = new RandomAccessFile(internBDD, "rw");
 
+			InternProfile arbre = createTree();
+
+			writeChildrenInterns(arbre, raf);				//Appel de la méthode qui permet d'écrire les infos stagiaires et celles de ses enfants à partir de la racine
+			
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally {
+			try {
+				raf.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	private String concatenateInternDatas(InternProfile internProfile) {
 
 		return (internProfile.getSurname() + "_" + internProfile.getFirstName() 
 		+ "_" + internProfile.getCounty() + "_" + internProfile.getPromotion() 
-		+ "_" + internProfile.getStudyYear());
+		+ "_" + internProfile.getStudyYear() + "_");
 
 	}
 
@@ -156,54 +160,50 @@ public class CreationAnnuaire {
 
 		InternProfile leftChild = internProfile.getLeftChild();
 		InternProfile rightChild = internProfile.getRightChild();
-		int leftChildPosition = 0;
-		int rightChildPosition = 0;
-		long parentPosition = 0;
+		int offsetLeftPosition = 9;											//Offset lié à l'écriture des 4 octets de la position enfant gauche, des 4 octets de la position enfant droit et du separateur final
+		int offsetRightPosition = 5;										//Offset lié à l'écriture des 4 octets de la position enfant droit et du separateur final
 
 		try {
-			
-			
-			raf.writeBytes(internProfile.getFirstName());								//Traitement
-			
-			if(leftChild != null && rightChild == null){								//Recursivité à Gauche
 
-				leftChildPosition = (int) raf.getFilePointer();
-				raf.writeInt(leftChildPosition);
-				writeChildrenInterns(leftChild, raf);
+			raf.writeBytes(concatenateInternDatas(internProfile));			//Traitement initial : Ecriture des données de l'élément courant
 
-			}else {
-				
-				leftChildPosition = (int) raf.getFilePointer();
-				raf.writeInt(leftChildPosition);
+			if(!leftChild.isEmpty) {										//Si présence d'un element gauche on indique sa position
+
+				raf.writeInt((int)raf.getFilePointer() + offsetLeftPosition); //On indique que l'enfant se situe à la position du pointeur + 9 octets (octets de données enfants)
+
+			}else if (leftChild.isEmpty) {
+
 				raf.writeInt(0);
-				raf.writeBytes(";");
-				writeChildrenInterns(leftChild, raf);
-				
+
 			}
+
+			if(!rightChild.isEmpty) {										//Si présence d'un element droit on indique sa position
+
+				raf.writeInt((int)raf.getFilePointer() + offsetRightPosition + leftChild.getSizeOfWholeChildren()); //On indique que l'enfant droit se situe à la position du pointeur + offSet + l'ensemble des données des enfants gauches
+
+			}else if (rightChild.isEmpty) {
+
+				raf.writeInt(0);
+
+			}
+
+			raf.writeBytes("\r");
 			
-			if(rightChild != null) {													//Recursivité à Droite
+
+			if(!leftChild.isEmpty){											//Si element possède un enfant gauche : Recursivité à Gauche
+
+				writeChildrenInterns(leftChild, raf);
+
+			}
+
+			if(!rightChild.isEmpty) {										//Si élement possède un enfant droit : Recursivité à Droite
 
 				writeChildrenInterns(rightChild, raf);
 
 			}
-			
-			if (leftChild == null && rightChild == null) {
-				
-				raf.writeInt(0);
-				raf.writeInt(0);
-				raf.writeBytes(";");
-				
-			}
-		
-			
-
-
-
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-	
 }
