@@ -22,15 +22,15 @@ public class TableViewInternProfiles extends AnchorPane {
 public TableViewInternProfiles() {
 		super();
 		//InternProfileDao dao = new InternProfileDao();
-		List<InternProfile> profiles = new ArrayList<InternProfile>();
-		
-		InternProfile bob = new InternProfile("John", "Bob", "98", "AI 108", 2020);
-		InternProfile joe = new InternProfile("Joe", "Sim", "96", "AI 108", 2008);
-		InternProfile zack = new InternProfile("Albert", "Zack","86", "SPB 08", 1980);
-		
-		profiles.add(bob);
-		profiles.add(joe);
-		profiles.add(zack);
+//		List<InternProfile> profiles = new ArrayList<InternProfile>();
+//		
+//		InternProfile bob = new InternProfile("John", "Bob", "98", "AI 108", 2020);
+//		InternProfile joe = new InternProfile("Joe", "Sim", "96", "AI 108", 2008);
+//		InternProfile zack = new InternProfile("Albert", "Zack","86", "SPB 08", 1980);
+//		
+//		profiles.add(bob);
+//		profiles.add(joe);
+//		profiles.add(zack);
 		
 		
 	
