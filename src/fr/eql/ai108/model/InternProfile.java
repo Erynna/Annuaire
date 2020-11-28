@@ -5,7 +5,7 @@ package fr.eql.ai108.model;
  * visualiser toute leur descendance.
  */
 public class InternProfile {
-	
+
 	private String surname;      		// nom de famille
 	private String firstName;			// prénom
 	private String county;				// département
@@ -14,12 +14,12 @@ public class InternProfile {
 	private InternProfile leftChild;	// enfant gauche
 	private InternProfile rightChild;	// enfant droit
 	boolean isEmpty;					// permet de savoir si le stagiaire a déjé été renseigné
-	
+
 	public InternProfile() {
 		super();
 		isEmpty = true;
 	}
-	
+
 	public InternProfile(String surname, String firstName, String county, String promotion, int studyYear) {
 		super();
 		this.surname = surname;
@@ -56,11 +56,11 @@ public class InternProfile {
 				leftChild.addChild(surname, firstName, county, promotion, studyYear);
 			}
 			else if (firstName.compareTo(firstName)>=0) {
-				leftChild.addChild(surname, firstName, county, promotion, studyYear);
+				rightChild.addChild(surname, firstName, county, promotion, studyYear);
 			}
 		}
 	}
-	
+
 	/*
 	 * Méthode qui permet de visualiser tous les descendants du stagiaire.
 	 */
@@ -73,31 +73,17 @@ public class InternProfile {
 	}
 	
 	/*
-	 * Méthode qui permet par récursivité de récupérer la taille de l'ensemble des informations des enfants de l'éléments courant
+	 * Méthode qui permet par récursivité de récupérer le nombre d'enfants présent sur la branche gauche
 	 */
-	public int getSizeOfWholeChildren() {
+	public int getNumberOfChildren() {
 		int size = 0;
-		
+
 		if(!isEmpty) {
-			size += getDatasSize();
-			size += leftChild.getSizeOfWholeChildren();
-			size += rightChild.getSizeOfWholeChildren();
+			size ++;
+			size += leftChild.getNumberOfChildren();
+			size += rightChild.getNumberOfChildren();
 		}
-		
-		return size;
-	}
-	
-	/*
-	 * Méthode qui permet de récupérer la taille des informations concaténées pour le stagiaire concerné
-	 */
-	public int getDatasSize() {
-		
-		int size;
-		int numberOfSeparators = 5;					//Séparateurs entre chaque information stagiaire
-		int numberOfPositionBytes = 9;				// 8 Octets servant à stocker les info des enfants gauches et droits + 1 octet pour le separateur final
-		
-		size = surname.length() + firstName.length() + county.length() + promotion.length() + String.valueOf(studyYear).length() + numberOfSeparators + numberOfPositionBytes;
-		
+
 		return size;
 	}
 
