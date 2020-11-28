@@ -144,15 +144,15 @@ public class CreationAnnuaire {
 		RandomAccessFile raf = null;
 
 		try {
-			
+
 			internBDD.createNewFile();
-			
+
 			raf = new RandomAccessFile(internBDD, "rw");
 
 			InternProfile arbre = createTree();
 
 			writeChildrenInterns(arbre, raf);				//Appel de la méthode qui permet d'écrire les infos stagiaires et celles de ses enfants à partir de la racine
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {
@@ -164,51 +164,52 @@ public class CreationAnnuaire {
 		}
 	}
 
-//	private String concatenateInternDatas(InternProfile internProfile) {
-//
-//		return (internProfile.getSurname() + "_" + internProfile.getFirstName() 
-//		+ "_" + internProfile.getCounty() + "_" + internProfile.getPromotion() 
-//		+ "_" + internProfile.getStudyYear() + "_");
-//
-//	}
-	
-	
+	/*
+	 * Méthode qui permet à partir d'un tableau de caractere de générer un tableau ordonné de bytes et de compléter par des bytes vides pour s'adapter aux tailles max des données
+	 */
 	public byte[] convertCharToByte(char[] data, int dataMaxLength) {
-		
+
 		byte[] dataInByte = new byte[dataMaxLength];
-		
+
 		for (int i = 0; i < data.length; i++) {
-			
+
 			dataInByte[i] = (byte) data[i];
 		}
-		
+
 		if (data.length < dataMaxLength) {
-			
+
 			for (int i = data.length; i < dataMaxLength; i++) {
-				
+
 				dataInByte[i] = 0;
-				
+
 			}
 		}
-		
+
 		return dataInByte;
 	}
-	
+
+	/*
+	 * Méthode qui permet de concatener l'ensemble des donnees presentes dans les differents tableaux de bytes sous la forme d'un seul et unique tableau de byte
+	 */
 	public byte[] concatenateInternDatas(InternProfile internProfile) {
 
+		ByteArrayOutputStream outputStream;
+		byte[] fullDatas;
+		
 		char[] surname = internProfile.getSurname().toCharArray();
 		char[] firstName = internProfile.getFirstName().toCharArray();
 		char[] county = internProfile.getCounty().toCharArray();
 		char[] promotion = internProfile.getPromotion().toCharArray();
 		char[] yearStudy = String.valueOf(internProfile.getStudyYear()).toCharArray();
-		
+
 		byte[] surnameByte = convertCharToByte(surname, maxSurnameLength);
 		byte[] firstNameByte = convertCharToByte(firstName, maxFirstNameLength);
 		byte[] countyByte = convertCharToByte(county, maxCountyLength);
 		byte[] promotionByte = convertCharToByte(promotion, maxPromotionLength);
 		byte[] yearStudyByte = convertCharToByte(yearStudy, maxYearStudyLength);
+
+		outputStream = new ByteArrayOutputStream(); 
 		
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); 
 		try {
 			outputStream.write(surnameByte);
 			outputStream.write(firstNameByte); 
@@ -225,11 +226,14 @@ public class CreationAnnuaire {
 			}
 		}
 
-		byte[] fullDatas = outputStream.toByteArray(); 
-		
+		fullDatas = outputStream.toByteArray(); 
+
 		return fullDatas;
 	}
 
+	/*
+	 * Méthode qui permet récursivement d'écrire les données stagiaires et les positions des enfants sous la forme d'une arborescence binaire en octets.
+	 */
 	private void writeChildrenInterns(InternProfile internProfile, RandomAccessFile raf) {
 
 		InternProfile leftChild = internProfile.getLeftChild();
@@ -237,12 +241,10 @@ public class CreationAnnuaire {
 		int fullDatasLength = maxSurnameLength + maxFirstNameLength + maxCountyLength + maxPromotionLength + maxYearStudyLength;
 		int offsetLeftPosition = fullDatasLength + 9;				//Offset lié à l'écriture des 4 octets de la position enfant gauche, des 4 octets de la position enfant droit, de l'ensemble des données stagiaire et du separateur final
 		int offsetRightPosition = fullDatasLength + 5;				//Offset lié à l'écriture des 4 octets de la position enfant droit, de l'ensemble des données stagiaire et du separateur final
-
 		byte[] tab = concatenateInternDatas(internProfile);
-		
-		
+
 		try {
-			
+
 			if(!leftChild.isEmpty) {										//Si présence d'un element gauche on indique sa position
 
 				raf.writeInt((int)raf.getFilePointer() + offsetLeftPosition); //On indique que l'enfant se situe à la position du pointeur + l'ensemble des données du stagiaire + 9 octets (octets de données enfants)
@@ -263,11 +265,10 @@ public class CreationAnnuaire {
 
 			}
 
-			raf.write(tab);
-			//raf.writeBytes(concatenateInternDatas(internProfile));			//Traitement initial : Ecriture des données de l'élément courant
+			raf.write(tab);													//Traitement initial : Ecriture des données de l'élément courant		
 
 			raf.writeBytes("\r");
-			
+
 			if(!leftChild.isEmpty){											//Si element possède un enfant gauche : Recursivité à Gauche
 
 				writeChildrenInterns(leftChild, raf);
@@ -284,7 +285,6 @@ public class CreationAnnuaire {
 			e.printStackTrace();
 		}
 	}
-	
 
 	public int getMaxSurnameLength() {
 		return maxSurnameLength;
