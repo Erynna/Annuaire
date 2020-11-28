@@ -1,26 +1,25 @@
 package fr.eql.ai108.model;
 
-
 /*
- * Classe qui permet de crÈer des objets de type InternProfile (i.e stagiaire), de leur ajouter un enfant, de 
+ * Classe qui permet de cr√©er des objets de type InternProfile (i.e stagiaire), de leur ajouter un enfant, de 
  * visualiser toute leur descendance.
  */
 public class InternProfile {
-	
+
 	private String surname;      		// nom de famille
-	private String firstName;			// prÈnom
-	private String county;				// dÈpartement
+	private String firstName;			// pr√©nom
+	private String county;				// d√©partement
 	private String promotion;			// nom de la promotion
-	private int studyYear;				// annÈe de la promotion
+	private int studyYear;				// ann√©e de la promotion
 	private InternProfile leftChild;	// enfant gauche
 	private InternProfile rightChild;	// enfant droit
-	boolean isEmpty;					// permet de savoir si le stagiaire a dÈj‡ ÈtÈ renseignÈ
-	
+	boolean isEmpty;					// permet de savoir si le stagiaire a d√©j√© √©t√© renseign√©
+
 	public InternProfile() {
 		super();
 		isEmpty = true;
 	}
-	
+
 	public InternProfile(String surname, String firstName, String county, String promotion, int studyYear) {
 		super();
 		this.surname = surname;
@@ -29,9 +28,9 @@ public class InternProfile {
 		this.promotion = promotion;
 		this.studyYear = studyYear;
 	}
-	
+
 	/*
-	 * MÈthode qui permet d'ajouter un enfant ‡ l'objet de la classe InternProfile.
+	 * M√©thode qui permet d'ajouter un enfant √© l'objet de la classe InternProfile.
 	 * @ param : un surname de type string, un firstName de type String, un county de type String, une promotion
 	 * de type String et un studyYear de type int. 
 	 */
@@ -57,13 +56,13 @@ public class InternProfile {
 				leftChild.addChild(surname, firstName, county, promotion, studyYear);
 			}
 			else if (firstName.compareTo(firstName)>=0) {
-				leftChild.addChild(surname, firstName, county, promotion, studyYear);
+				rightChild.addChild(surname, firstName, county, promotion, studyYear);
 			}
 		}
 	}
-	
+
 	/*
-	 * MÈthode qui permet de visualiser tous les descendants du stagiaire.
+	 * M√©thode qui permet de visualiser tous les descendants du stagiaire.
 	 */
 	public void printDescendants() {
 		if(!isEmpty) {
@@ -71,6 +70,21 @@ public class InternProfile {
 			System.out.println(toString());
 			rightChild.printDescendants();
 		}
+	}
+	
+	/*
+	 * M√©thode qui permet par r√©cursivit√© de r√©cup√©rer le nombre d'enfants pr√©sent sur la branche gauche
+	 */
+	public int getNumberOfChildren() {
+		int size = 0;
+
+		if(!isEmpty) {
+			size ++;
+			size += leftChild.getNumberOfChildren();
+			size += rightChild.getNumberOfChildren();
+		}
+
+		return size;
 	}
 
 	@Override
