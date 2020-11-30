@@ -73,20 +73,65 @@ public class InternProfile {
 	}
 	
 	/*
-	 * Méthode qui permet par récursivité de récupérer le nombre d'enfants présent sur la branche gauche
+	 * Méthode qui permet de compter le nombre de caracteres spéciaux dans les données (utile pour définir la taille des champs
 	 */
-	public int getNumberOfChildren() {
-		int size = 0;
-
-		if(!isEmpty) {
-			size ++;
-			size += leftChild.getNumberOfChildren();
-			size += rightChild.getNumberOfChildren();
+	public int countNumberOfSpecialChars(String data) {
+		
+		int nbOfSpecialChars = 0;
+		
+		char[] letters = data.toCharArray();
+		byte[] lettersInBytes = new byte[letters.length];
+		
+		for (int i = 0; i < letters.length; i++) {
+			
+			lettersInBytes[i] = (byte) letters[i];
+			
+			if (lettersInBytes[i] < 0) {			//Si le byte est inférieur à 0 alors présence d'un caractere spécial car les 0 < bytes < 255
+				
+				nbOfSpecialChars++;
+				
+			}
 		}
+		
+		return nbOfSpecialChars;
+		
+	}
+	
+	/*
+	 * Méthode qui permet de récupérer la taille de l'ensemble des données du stagiaire courant
+	 */
+	public int getSizeOfCurrentInternDatas() {
+		
+		int size = 0;
+		int sizeOfFixedBytes = 17;				//17 octets dédiés à: la localisation des enfants, la définition de la taille des données et au sépararteur final
+
+		int surnameSize = getSurname().length() + countNumberOfSpecialChars(getSurname());
+		int firstNameSize = getFirstName().length() + countNumberOfSpecialChars(getFirstName());
+		int countySize = getCounty().length() + countNumberOfSpecialChars(getCounty());
+		int promotionSize = getPromotion().length() + countNumberOfSpecialChars(getPromotion());
+		int yearStudySize = String.valueOf(getStudyYear()).length();
+
+			size = sizeOfFixedBytes + surnameSize + firstNameSize + countySize + promotionSize + yearStudySize;
 
 		return size;
 	}
 
+	/*
+	 * Méthode qui permet par récursivité de récupérer la taille de l'ensemble des données de l'arborescence à partir du stagiaire courant
+	 */
+	public int getSizeOfChildrenDatas() {
+		
+		int size = 0;
+
+		if(!isEmpty) {
+			size = getSizeOfCurrentInternDatas();
+			size += leftChild.getSizeOfChildrenDatas();
+			size += rightChild.getSizeOfChildrenDatas();
+		}
+
+		return size;
+	}
+	
 	@Override
 	public String toString() {
 		return "InternProfile [surname=" + surname + ", firstName=" + firstName + ", county=" + county + ", promotion="
@@ -194,5 +239,4 @@ public class InternProfile {
 	public void setRightChild(InternProfile rightChild) {
 		this.rightChild = rightChild;
 	}
-
 }

@@ -1,10 +1,6 @@
 package fr.eql.ai108.model;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -19,23 +15,19 @@ public class AdminUserDao {
 	 */
 	public void addAdminAccount(String login, String password) {
 
-		FileWriter out = null;
-		BufferedWriter bw = null;
 		RandomAccessFile raf = null;
 
 		try {
 
-			raf = new RandomAccessFile(loginsBDD, "rw");
-
 			loginsBDD.createNewFile();
 
-			out = new FileWriter(loginsBDD, true);
-			bw = new BufferedWriter(out);
+			raf = new RandomAccessFile(loginsBDD, "rw");
+			
+			raf.seek(getFileLength(raf));
 
 			if(!checkLoginExistence(login)) {
-				bw.write(login);
-				bw.write(0);											//Ecriture d'un octet null afin de séparer les champs Login et Password
-				bw.write(password + "\r");
+				raf.writeUTF(login);
+				raf.writeUTF(password);
 			}
 
 
@@ -43,8 +35,6 @@ public class AdminUserDao {
 			e.printStackTrace();
 		}finally {
 			try {
-				bw.close();
-				out.close();
 				raf.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -67,7 +57,7 @@ public class AdminUserDao {
 			if (checkLoginExistence(login)) {
 
 				raf.seek(pointerPosition);
-				password = raf.readLine();
+				password = raf.readUTF();
 
 			}
 		} catch (IOException e) {
@@ -88,11 +78,8 @@ public class AdminUserDao {
 	public boolean checkLoginExistence(String login) {
 
 		boolean loginExistence = false;
-		byte actualReadByte;
-		byte[] loginFromBDD;
 		RandomAccessFile raf = null;
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		String convertedLogin = "";
+		String loginToCompare ="";
 		int fileLength = 0;
 
 		try {
@@ -103,22 +90,16 @@ public class AdminUserDao {
 			if (fileLength > 0) {
 				do {
 
-					while ((actualReadByte = raf.readByte()) != 0) {			//Lecture de l'identifiant courant jusqu'au séparateur : octet nul
+					loginToCompare = raf.readUTF();
 
-						outputStream.write(actualReadByte);						//Ajout de chaque octet de données à l'OutputStream afin de recomposer l'identifiant
-
-					}
-
-					loginFromBDD = outputStream.toByteArray();
-					outputStream.reset();
-					convertedLogin = new String(loginFromBDD);
-
-					if(convertedLogin.equals(login)) {
-						pointerPosition = raf.getFilePointer();
+					if(loginToCompare.equals(login)) {
+						
+						pointerPosition = raf.getFilePointer();					//Enregistrement de la position du pointeur dans une variable de classe afin de pouvoir utiliser l'information à l'extérieur (récupération mdp)
 						loginExistence = true;
 						break;
+						
 					}else {
-						raf.readLine();
+						raf.readUTF();
 					}
 
 				}while(raf.getFilePointer() < fileLength);						//Bouclage sur la totalité du fichier
@@ -127,7 +108,6 @@ public class AdminUserDao {
 			e.printStackTrace();
 		}finally {
 			try {
-				outputStream.close();
 				raf.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -145,12 +125,17 @@ public class AdminUserDao {
 		int position = 0;
 
 		try {
+			
+			raf.seek(0);
+			
 			while(raf.readLine() != null) {
 
 				position = (int) raf.getFilePointer();
 
 			}
+			
 			raf.seek(0);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
