@@ -7,22 +7,23 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import javafx.stage.FileChooser;
+
 /*
  * Classe utilitaire qui permet d'extraire ligne à ligne des données d'un fichier texte pour en faire des stagiaires 
  * qui s'inscrivent dans un arbre de stagiaires.
  */
 public class CreationAnnuaire {
 
-	private final String originalFilePath = "./stagiaires.txt";
-	private final String internBDDPath = "./internBDD.bin";
+	private final String originalFilePath;
 	private int maxSurnameLength = 0;
 	private int maxFirstNameLength = 0;
 	private int maxCountyLength = 0;
 	private int maxPromotionLength = 0;
 	private int maxYearStudyLength = 4;
 
-	public CreationAnnuaire() {
-		super();
+	public CreationAnnuaire(String originalFilePath) {
+		this.originalFilePath = originalFilePath;
 	}
 
 	/*
@@ -138,13 +139,12 @@ public class CreationAnnuaire {
 	/*
 	 * Méthode qui permet récursivement de créer le fichier optimisé composé des informations stagiaires ainsi que les position des enfants gauches et droits
 	 */
-	public void createInternsBDDFile() {
+	public void createInternsBDDFile(File internBDD) {
 
-		File internBDD = new File(internBDDPath);
 		RandomAccessFile raf = null;
 
 		try {
-
+			
 			internBDD.createNewFile();
 
 			raf = new RandomAccessFile(internBDD, "rw");
