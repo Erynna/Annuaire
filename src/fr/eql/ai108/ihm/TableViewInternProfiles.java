@@ -21,7 +21,10 @@ public class TableViewInternProfiles extends AnchorPane {
 	
 public TableViewInternProfiles() {
 		super();
-		InternProfileDao dao = new InternProfileDao("./internBDD.bin");
+		//Récupération du chemin du fichier choisi dans le panneau précédent
+		ChoicePan choicePan = new ChoicePan();
+		String annuaire = choicePan.getLblFileBin().getText();
+		InternProfileDao dao = new InternProfileDao(annuaire);
 
 		ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(dao.getAll());
 		
@@ -29,13 +32,13 @@ public TableViewInternProfiles() {
 		
 		TableColumn<InternProfile, String> colSurName = new TableColumn<InternProfile, String>("Nom");
 		colSurName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("surname"));
-		TableColumn<InternProfile, String> colFirstName = new TableColumn<InternProfile, String>("Prénom");
+		TableColumn<InternProfile, String> colFirstName = new TableColumn<InternProfile, String>("PrÃ©nom");
 		colFirstName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("firstName"));
-		TableColumn<InternProfile, String> colCounty = new TableColumn<InternProfile, String>("Département");
+		TableColumn<InternProfile, String> colCounty = new TableColumn<InternProfile, String>("DÃ©partement");
 		colCounty.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("county"));
 		TableColumn<InternProfile, String> colPromotion = new TableColumn<InternProfile, String>("Promotion");
 		colPromotion.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("promotion"));
-		TableColumn<InternProfile, Integer> colStudyYear = new TableColumn<InternProfile, Integer>("Année");
+		TableColumn<InternProfile, Integer> colStudyYear = new TableColumn<InternProfile, Integer>("AnnÃ©e");
 		colStudyYear.setCellValueFactory(new PropertyValueFactory<InternProfile, Integer>("studyYear"));
 		
 		tableView.getColumns().addAll(colSurName, colFirstName, colCounty, colPromotion, colStudyYear);

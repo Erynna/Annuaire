@@ -28,6 +28,7 @@ public class AdminUserDao {
 			if(!checkLoginExistence(login)) {
 				raf.writeUTF(login);
 				raf.writeUTF(password);
+				raf.writeUTF("\r\n");
 			}
 
 
@@ -144,18 +145,34 @@ public class AdminUserDao {
 	}
 	
 	/*
+<<<<<<< HEAD
 	 * Méthode qui permet de renvoyer un booleen true si les informations de connexion : login et password sont corrects, false sinon.
+=======
+	 * M�thode qui permet à un admin de se connecter après vérification de son login et mot de passe 
+>>>>>>> branch 'main' of https://github.com/Erynna/Annuaire.git
 	 */
 	public boolean connexion(AdminUser admin) {
 	
 		boolean connexion = false;
 		
+<<<<<<< HEAD
 		if(admin.getPassword().equals(collectPassword(admin.getLogin()))) {
 			connexion = true;
 		}
+=======
+		boolean connexion = false;
+>>>>>>> branch 'main' of https://github.com/Erynna/Annuaire.git
 		
+<<<<<<< HEAD
 		return connexion;
 		
+=======
+		if(admin.getPassword().equals(collectPassword(admin.getLogin()))) {
+			connexion = true;
+		}
+		return connexion;
+>>>>>>> branch 'main' of https://github.com/Erynna/Annuaire.git
 	}
+
 	
 }
