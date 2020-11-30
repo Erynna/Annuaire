@@ -1,10 +1,8 @@
 package fr.eql.ai108.ihm;
 
-import java.util.ArrayList;
 import java.util.List;
 import fr.eql.ai108.model.InternProfile;
 import fr.eql.ai108.model.InternProfileDao;
-import fr.eql.ai108.model.MyClass;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -23,11 +21,9 @@ public class TableViewInternProfiles extends AnchorPane {
 	
 public TableViewInternProfiles() {
 		super();
-		InternProfileDao dao = new InternProfileDao();
+		InternProfileDao dao = new InternProfileDao("./internBDD.bin");
 
-		//ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(dao.getAll);
-		
-		ObservableList<InternProfile> observableProfiles = MyClass.getGlobalObservableProfiles(); //Test
+		ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(dao.getAll());
 		
 		TableView<InternProfile> tableView = new TableView<InternProfile>(observableProfiles);
 		
