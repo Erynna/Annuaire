@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import fr.eql.ai108.model.InternProfile;
 import fr.eql.ai108.model.InternProfileDao;
+import fr.eql.ai108.model.MyClass;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -19,23 +20,14 @@ public class TableViewInternProfiles extends AnchorPane {
 	private List<InternProfile> profiles;
 	private InternProfile internProfile;
 	
+	
 public TableViewInternProfiles() {
 		super();
-		//InternProfileDao dao = new InternProfileDao();
-//		List<InternProfile> profiles = new ArrayList<InternProfile>();
-//		
-//		InternProfile bob = new InternProfile("John", "Bob", "98", "AI 108", 2020);
-//		InternProfile joe = new InternProfile("Joe", "Sim", "96", "AI 108", 2008);
-//		InternProfile zack = new InternProfile("Albert", "Zack","86", "SPB 08", 1980);
-//		
-//		profiles.add(bob);
-//		profiles.add(joe);
-//		profiles.add(zack);
+		InternProfileDao dao = new InternProfileDao();
+
+		//ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(dao.getAll);
 		
-		
-	
-		ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(profiles);
-		
+		ObservableList<InternProfile> observableProfiles = MyClass.getGlobalObservableProfiles(); //Test
 		
 		TableView<InternProfile> tableView = new TableView<InternProfile>(observableProfiles);
 		
