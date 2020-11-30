@@ -28,6 +28,7 @@ public class AdminUserDao {
 			if(!checkLoginExistence(login)) {
 				raf.writeUTF(login);
 				raf.writeUTF(password);
+				raf.writeUTF("\r\n");
 			}
 
 

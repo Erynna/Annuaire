@@ -80,7 +80,7 @@ public class IdentificationPannel extends VBox {
 		
 		
 		
-		//Si connection admin
+		//Si connection admin			//OK sans l'ajout des boutons au tableview
 		btnConnexion.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -94,15 +94,16 @@ public class IdentificationPannel extends VBox {
 				//Si login et mot de passe correct
 				if (verification) {
 					//Ajout des fonctionnalités administrateur  --> Vérification à faire
-					MainPannel main = new MainPannel();
-					main.getVbSearchOptions().getChildren().add(vbAdmin);
+//					MainPannel main = new MainPannel();
+//					main.getVbSearchOptions().getChildren().add(vbAdmin);
 					
 					//Affichage du panneau choix de l'annaire
 					ChoicePan root = new ChoicePan();
 					Scene scene = new Scene(root);
-					Stage stage = (Stage) getScene().getWindow();
+					Stage stage = new Stage();
 					stage.setTitle("Choix de l'annuaire");
 					stage.setScene(scene);
+					stage.show();
 					
 				//Sinon affichage d'un message d'erreur
 				}else {
@@ -111,29 +112,30 @@ public class IdentificationPannel extends VBox {
 			}
 		});
 		
-		//Si cr�ation d'un compte admin, ouverture d'un autre panneau
+		//Si création d'un compte admin, ouverture d'un autre panneau	//OK
 		btnCreationAdmin.setOnAction(new EventHandler<ActionEvent>() {
 			
 			public void handle(ActionEvent event) {
 				CreationAdminPan root = new CreationAdminPan();
 				Scene scene = new Scene(root);
 				Stage stage = new Stage();
-				stage.setTitle("Cr�ation d'un compte administrateur");
+				stage.setTitle("Création d'un compte administrateur");
 				stage.setScene(scene);
 				stage.show();
 			}
 		});
 		
-		//Connexion en tant qu'utilisateur -> affichage du panneau principal
+		//Connexion en tant qu'utilisateur -> affichage du panneau choix de l'annuaire
 		btnLambdaUser.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				ChoicePan root = new ChoicePan();
 				Scene scene = new Scene(root);
-				Stage stage = (Stage) getScene().getWindow();
+				Stage stage = new Stage();
 				stage.setTitle("Choix de l'annuaire");
-				stage.setScene(scene);	
+				stage.setScene(scene);
+				stage.show();
 			}
 		});
 	}
