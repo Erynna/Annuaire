@@ -1,40 +1,81 @@
 package fr.eql.ai108.ihm;
 
 import fr.eql.ai108.model.AdminUser;
+import fr.eql.ai108.model.AdminUserDao;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-public class IdentificationPannel extends GridPane {
+public class IdentificationPannel extends VBox {
 	private Label lblLogin;
 	private TextField tfLogin;
+	private HBox hbLog;
 	private Label lblPassword;
 	private TextField tfPassword;
+	private HBox hbPass;
 	private Button btnLambdaUser;
 	private Button btnConnexion;
+	private Button btnCreationAdmin;
+	private HBox hbButton;
+	private TextField error;
 	
 	
 	public IdentificationPannel() {
 		super();
 		
+		hbLog = new HBox();
 		lblLogin = new Label("Login : ");
+		lblLogin.setPrefWidth(150);
 		tfLogin = new TextField();
-		addRow(0, lblLogin, tfLogin);
+		tfLogin.setPrefWidth(300);
+		hbLog.getChildren().addAll(lblLogin, tfLogin);
+		hbLog.setAlignment(Pos.TOP_CENTER);
+		hbLog.setPadding(new Insets(5.));
 		
+		hbPass = new HBox();
 		lblPassword = new Label("Mot de passe : ");
+		lblPassword.setPrefWidth(150);
 		tfPassword = new TextField();
-		addRow(1, lblPassword, tfPassword);
+		tfPassword.setPrefWidth(300);
+		hbPass.getChildren().addAll(lblPassword, tfPassword);
+		hbPass.setAlignment(Pos.TOP_CENTER);
+		hbPass.setPadding(new Insets(5.));
 		
-		btnConnexion = new Button("Se connecter en tant qu'Administrateur");
-		btnConnexion.setPrefSize(400, 300);
-		addRow(2, btnConnexion);
-		
+		hbButton = new HBox();
+		btnConnexion = new Button("Se connecter");
+		btnConnexion.setPrefSize(150, 100);
 		btnLambdaUser = new Button("Utilisateur");
-		btnLambdaUser.setPrefSize(400, 300);
-		addRow(3, btnLambdaUser);
+		btnLambdaUser.setPrefSize(150, 100);
+		//Créer un compte admin
+		btnCreationAdmin = new Button("Créer un compte" + "\n   administrateur");
+		btnCreationAdmin.setPrefSize(150, 100);
+		hbButton.getChildren().addAll(btnConnexion, btnCreationAdmin, btnLambdaUser);
+		hbButton.setAlignment(Pos.BOTTOM_CENTER);
+		hbButton.setPadding(new Insets(15.));
+		
+		getChildren().addAll(hbLog, hbPass, hbButton);
+		setSpacing(15);
+		
+		//Fonctinnalités admin
+		Button deleteBtn = new Button("Supprimer");
+		deleteBtn.setPrefSize(100, 30);
+		
+		Button updateBtn = new Button("MÃ J");
+		updateBtn.setPrefSize(100, 30);
+		
+		VBox vbAdmin = new VBox();
+		vbAdmin.getChildren().addAll(deleteBtn, updateBtn);
+		
+		error = new TextField("Login et/ou mot de passe incorrect");
+		
 		
 		//Si connection admin
 		btnConnexion.setOnAction(new EventHandler<ActionEvent>() {
@@ -43,16 +84,55 @@ public class IdentificationPannel extends GridPane {
 			public void handle(ActionEvent event) {
 				String lg = tfLogin.getText();
 				String ps = tfPassword.getText();
-				AdminUser admin = new AdminUser();
-				if (lg.equals(admin.getLogin()) && ps.equals(admin.getPassword())) {
+				boolean verification = false;
+				AdminUser admin = new AdminUser(lg, ps); 	
+				AdminUserDao dao = new AdminUserDao();
+				verification = dao.connection(admin);
+				//Si login et mot de passe correct
+				if (verification) {
+					MainPannel root = new MainPannel();
+					Scene scene = new Scene(root);
+					Stage stage = new Stage();
+					//Ajout des fonctionnalités administrateur
+					root.getVbSearchOptions().getChildren().add(vbAdmin);
 					
+					stage.setTitle("Annuaire");
+					stage.setScene(scene);
+					stage.show();
+				//Sinon affichage d'un message d'erreur
+				}else {
+					getChildren().add(error);
 				}
+			}
+		});
+		
+		//Si création d'un compte admin, ouverture d'un autre panneau
+		btnCreationAdmin.setOnAction(new EventHandler<ActionEvent>() {
+			
+			public void handle(ActionEvent event) {
+				CreationAdminPan root = new CreationAdminPan();
+				Scene scene = new Scene(root);
+				Stage stage = new Stage();
+				stage.setTitle("Création d'un compte administrateur");
+				stage.setScene(scene);
+				stage.show();
+			}
+		});
+		
+		//Connexion en tant qu'utilisateur -> affichage du panneau principal
+		btnLambdaUser.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				MainPannel root = new MainPannel();  
+				Scene scene = new Scene(root);
+				Stage stage = (Stage) getScene().getWindow();
+				stage.setTitle("Annuaire");
+				stage.setScene(scene);
 				
 				
 			}
 		});
-		
-		
 	}
 
 
@@ -82,41 +162,57 @@ public class IdentificationPannel extends GridPane {
 	public void setTfPassword(TextField tfPassword) {
 		this.tfPassword = tfPassword;
 	}
-
-
-
-
 	public Button getBtnLambdaUser() {
 		return btnLambdaUser;
 	}
-
-
-
-
 	public void setBtnLambdaUser(Button btnLambdaUser) {
 		this.btnLambdaUser = btnLambdaUser;
 	}
-
-
-
-
 	public Button getBtnConnexion() {
 		return btnConnexion;
 	}
-
-
-
-
 	public void setBtnConnexion(Button btnConnexion) {
 		this.btnConnexion = btnConnexion;
+	}
+	public HBox getHbLog() {
+		return hbLog;
+	}
+	public void setHbLog(HBox hbLog) {
+		this.hbLog = hbLog;
+	}
+	public HBox getHbPass() {
+		return hbPass;
+	}
+	public void setHbPass(HBox hbPass) {
+		this.hbPass = hbPass;
+	}
+	public Button getBtnCreationAdmin() {
+		return btnCreationAdmin;
+	}
+	public void setBtnCreationAdmin(Button btnCreationAdmin) {
+		this.btnCreationAdmin = btnCreationAdmin;
+	}
+	public HBox getHbButton() {
+		return hbButton;
+	}
+	public void setHbButton(HBox hbButton) {
+		this.hbButton = hbButton;
 	}
 
 
 
 
-	
-	
-	
+	public TextField getError() {
+		return error;
+	}
+
+
+
+
+	public void setError(TextField error) {
+		this.error = error;
+	}
+
 	
 
 }
