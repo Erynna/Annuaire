@@ -12,110 +12,82 @@ import javafx.scene.layout.AnchorPane;
 
 
 public class TableViewInternProfiles extends AnchorPane {
-	
+
 	private ObservableList<InternProfile> observableProfiles;
 	private TableView<InternProfile> tableView;
 	private List<InternProfile> profiles;
 	private InternProfile internProfile;
-	
-	
-public TableViewInternProfiles() {
+
+	@SuppressWarnings("unchecked")
+	public TableViewInternProfiles(String annuaire) {
 		super();
+
 		//Récupération du chemin du fichier choisi dans le panneau précédent
 		ChoicePan choicePan = new ChoicePan();
-		String annuaire = choicePan.getLblFileBin().getText();
-		InternProfileDao dao = new InternProfileDao(annuaire);
-
-		ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(dao.getAll());
 		
-		TableView<InternProfile> tableView = new TableView<InternProfile>(observableProfiles);
+		//choicePan.getLblFileBin().getText();
+		InternProfileDao dao = new InternProfileDao(annuaire);
+		observableProfiles = FXCollections.observableArrayList(dao.getAll());
+		tableView = new TableView<InternProfile>(observableProfiles);
 		
 		TableColumn<InternProfile, String> colSurName = new TableColumn<InternProfile, String>("Nom");
 		colSurName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("surname"));
-		TableColumn<InternProfile, String> colFirstName = new TableColumn<InternProfile, String>("PrÃ©nom");
+		TableColumn<InternProfile, String> colFirstName = new TableColumn<InternProfile, String>("Prénom");
 		colFirstName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("firstName"));
-		TableColumn<InternProfile, String> colCounty = new TableColumn<InternProfile, String>("DÃ©partement");
+		TableColumn<InternProfile, String> colCounty = new TableColumn<InternProfile, String>("Département");
 		colCounty.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("county"));
 		TableColumn<InternProfile, String> colPromotion = new TableColumn<InternProfile, String>("Promotion");
 		colPromotion.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("promotion"));
-		TableColumn<InternProfile, Integer> colStudyYear = new TableColumn<InternProfile, Integer>("AnnÃ©e");
+		TableColumn<InternProfile, Integer> colStudyYear = new TableColumn<InternProfile, Integer>("Année");
 		colStudyYear.setCellValueFactory(new PropertyValueFactory<InternProfile, Integer>("studyYear"));
-		
+
 		tableView.getColumns().addAll(colSurName, colFirstName, colCounty, colPromotion, colStudyYear);
-		
+
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		
-		
+
+
 		getChildren().add(tableView);
 		setPrefSize(800, 500);
+		
 		AnchorPane.setBottomAnchor(tableView, 5.);
 		AnchorPane.setLeftAnchor(tableView, 5.);
 		AnchorPane.setRightAnchor(tableView, 5.);
 		AnchorPane.setTopAnchor(tableView, 5.);
-		
-		
-	
-		
-			
 
 	}
 
-
-
-public ObservableList<InternProfile> getObservableProfiles() {
-	return observableProfiles;
-}
-
-
-
-public void setObservableProfiles(ObservableList<InternProfile> observableProfiles) {
-	this.observableProfiles = observableProfiles;
-}
-
-
-
-public TableView<InternProfile> getTableView() {
-	return tableView;
-}
-
-
-
-public void setTableView(TableView<InternProfile> tableView) {
-	this.tableView = tableView;
-}
-
-
-
-public List<InternProfile> getProfiles() {
-	return profiles;
-}
-
-
-
-public void setProfiles(List<InternProfile> profiles) {
-	this.profiles = profiles;
-}
-
-
-
-public InternProfile getInternProfile() {
-	return internProfile;
-}
-
-
-
-public void setInternProfile(InternProfile internProfile) {
-	this.internProfile = internProfile;
-}
-
-
-
-		
-	
-		
-	
-
-
+	public ObservableList<InternProfile> getObservableProfiles() {
+		return observableProfiles;
 	}
+
+	public void setObservableProfiles(ObservableList<InternProfile> observableProfiles) {
+		this.observableProfiles = observableProfiles;
+	}
+
+	public TableView<InternProfile> getTableView() {
+		return tableView;
+	}
+
+	public void setTableView(TableView<InternProfile> tableView) {
+		this.tableView = tableView;
+	}
+
+	public List<InternProfile> getProfiles() {
+		return profiles;
+	}
+
+	public void setProfiles(List<InternProfile> profiles) {
+		this.profiles = profiles;
+	}
+
+	public InternProfile getInternProfile() {
+		return internProfile;
+	}
+
+	public void setInternProfile(InternProfile internProfile) {
+		this.internProfile = internProfile;
+	}
+
+}
 
 

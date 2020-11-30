@@ -7,8 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import javafx.stage.FileChooser;
-
 /*
  * Classe utilitaire qui permet d'extraire ligne à ligne des données d'un fichier texte pour en faire des stagiaires 
  * qui s'inscrivent dans un arbre de stagiaires.
@@ -199,31 +197,25 @@ public class CreationAnnuaire {
 	public byte[] concatenateInternDatas(InternProfile internProfile) {
 
 		ByteArrayOutputStream outputStream= new ByteArrayOutputStream();
-		byte[] fullDatas;
-		byte[] surname = completeWithEmptyBytes(internProfile.getSurname(), maxSurnameLength);
-		byte[] firstName = completeWithEmptyBytes(internProfile.getFirstName(), maxFirstNameLength);
-		byte[] county = completeWithEmptyBytes(internProfile.getCounty(), maxCountyLength);
-		byte[] promotion = completeWithEmptyBytes(internProfile.getPromotion(), maxPromotionLength);
-		byte[] studyYear = completeWithEmptyBytes(String.valueOf(internProfile.getStudyYear()), maxYearStudyLength);
+		byte[] fullDatas = null;
 		
 		try {
-			outputStream.write(surname);
-			outputStream.write(firstName); 
-			outputStream.write(county); 
-			outputStream.write(promotion); 
-			outputStream.write(studyYear); 
+			outputStream.write(completeWithEmptyBytes(internProfile.getSurname(), maxSurnameLength));
+			outputStream.write(completeWithEmptyBytes(internProfile.getFirstName(), maxFirstNameLength)); 
+			outputStream.write(completeWithEmptyBytes(internProfile.getCounty(), maxCountyLength)); 
+			outputStream.write(completeWithEmptyBytes(internProfile.getPromotion(), maxPromotionLength)); 
+			outputStream.write(completeWithEmptyBytes(String.valueOf(internProfile.getStudyYear()), maxYearStudyLength)); 
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
+				fullDatas = outputStream.toByteArray();
 				outputStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
-		fullDatas = outputStream.toByteArray(); 
 
 		return fullDatas;
 	}

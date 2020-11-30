@@ -22,13 +22,12 @@ public class AdminUserDao {
 			loginsBDD.createNewFile();
 
 			raf = new RandomAccessFile(loginsBDD, "rw");
-			
+
 			raf.seek(getFileLength(raf));
 
 			if(!checkLoginExistence(login)) {
 				raf.writeUTF(login);
 				raf.writeUTF(password);
-				raf.writeUTF("\r\n");
 			}
 
 
@@ -94,11 +93,11 @@ public class AdminUserDao {
 					loginToCompare = raf.readUTF();
 
 					if(loginToCompare.equals(login)) {
-						
+
 						pointerPosition = raf.getFilePointer();					//Enregistrement de la position du pointeur dans une variable de classe afin de pouvoir utiliser l'information à l'extérieur (récupération mdp)
 						loginExistence = true;
 						break;
-						
+
 					}else {
 						raf.readUTF();
 					}
@@ -126,53 +125,36 @@ public class AdminUserDao {
 		int position = 0;
 
 		try {
-			
+
 			raf.seek(0);
-			
+
 			while(raf.readLine() != null) {
 
 				position = (int) raf.getFilePointer();
 
 			}
-			
+
 			raf.seek(0);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		return position;
 	}
-	
+
 	/*
-<<<<<<< HEAD
 	 * Méthode qui permet de renvoyer un booleen true si les informations de connexion : login et password sont corrects, false sinon.
-=======
-	 * M�thode qui permet à un admin de se connecter après vérification de son login et mot de passe 
->>>>>>> branch 'main' of https://github.com/Erynna/Annuaire.git
 	 */
 	public boolean connexion(AdminUser admin) {
-	
-		boolean connexion = false;
-		
-<<<<<<< HEAD
-		if(admin.getPassword().equals(collectPassword(admin.getLogin()))) {
-			connexion = true;
-		}
-=======
-		boolean connexion = false;
->>>>>>> branch 'main' of https://github.com/Erynna/Annuaire.git
-		
-<<<<<<< HEAD
-		return connexion;
-		
-=======
-		if(admin.getPassword().equals(collectPassword(admin.getLogin()))) {
-			connexion = true;
-		}
-		return connexion;
->>>>>>> branch 'main' of https://github.com/Erynna/Annuaire.git
-	}
 
-	
+		boolean connexion = false;
+
+		if(admin.getPassword().equals(collectPassword(admin.getLogin()))) {
+			connexion = true;
+		}
+
+		return connexion;
+
+	}
 }
