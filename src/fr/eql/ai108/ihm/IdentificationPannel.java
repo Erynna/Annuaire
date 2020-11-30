@@ -56,8 +56,8 @@ public class IdentificationPannel extends VBox {
 		btnConnexion.setPrefSize(150, 100);
 		btnLambdaUser = new Button("Utilisateur");
 		btnLambdaUser.setPrefSize(150, 100);
-		//Créer un compte admin
-		btnCreationAdmin = new Button("Créer un compte" + "\n   administrateur");
+		//Crï¿½er un compte admin
+		btnCreationAdmin = new Button("Crï¿½er un compte" + "\n   administrateur");
 		btnCreationAdmin.setPrefSize(150, 100);
 		hbButton.getChildren().addAll(btnConnexion, btnCreationAdmin, btnLambdaUser);
 		hbButton.setAlignment(Pos.BOTTOM_CENTER);
@@ -66,7 +66,7 @@ public class IdentificationPannel extends VBox {
 		getChildren().addAll(hbLog, hbPass, hbButton);
 		setPrefSize(600, 400);
 		
-		//Fonctinnalités admin
+		//Fonctinnalitï¿½s admin
 		Button deleteBtn = new Button("Supprimer");
 		deleteBtn.setPrefSize(100, 30);
 		
@@ -90,18 +90,20 @@ public class IdentificationPannel extends VBox {
 				boolean verification = false;
 				AdminUser admin = new AdminUser(lg, ps); 	
 				AdminUserDao dao = new AdminUserDao();
-				verification = dao.connection(admin);
+				verification = dao.connexion(admin);
 				//Si login et mot de passe correct
 				if (verification) {
-					MainPannel root = new MainPannel();
-					Scene scene = new Scene(root);
-					Stage stage = new Stage();
-					//Ajout des fonctionnalités administrateur
-					root.getVbSearchOptions().getChildren().add(vbAdmin);
+					//Ajout des fonctionnalitÃ©s administrateur  --> VÃ©rification Ã  faire
+					MainPannel main = new MainPannel();
+					main.getVbSearchOptions().getChildren().add(vbAdmin);
 					
-					stage.setTitle("Annuaire");
+					//Affichage du panneau choix de l'annaire
+					ChoicePan root = new ChoicePan();
+					Scene scene = new Scene(root);
+					Stage stage = (Stage) getScene().getWindow();
+					stage.setTitle("Choix de l'annuaire");
 					stage.setScene(scene);
-					stage.show();
+					
 				//Sinon affichage d'un message d'erreur
 				}else {
 					getChildren().add(error);
@@ -109,14 +111,14 @@ public class IdentificationPannel extends VBox {
 			}
 		});
 		
-		//Si création d'un compte admin, ouverture d'un autre panneau
+		//Si crï¿½ation d'un compte admin, ouverture d'un autre panneau
 		btnCreationAdmin.setOnAction(new EventHandler<ActionEvent>() {
 			
 			public void handle(ActionEvent event) {
 				CreationAdminPan root = new CreationAdminPan();
 				Scene scene = new Scene(root);
 				Stage stage = new Stage();
-				stage.setTitle("Création d'un compte administrateur");
+				stage.setTitle("Crï¿½ation d'un compte administrateur");
 				stage.setScene(scene);
 				stage.show();
 			}

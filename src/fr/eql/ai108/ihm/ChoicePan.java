@@ -3,6 +3,7 @@ package fr.eql.ai108.ihm;
 import java.io.File;
 
 import fr.eql.ai108.model.CreationAnnuaire;
+import fr.eql.ai108.model.InternProfileDao;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,6 +28,7 @@ public class ChoicePan extends VBox {
 	private Label lblFileBin;
 	private HBox hbBin;
 	private Button btnOk2;
+	private Label error;
 	
 	
 				public ChoicePan() {
@@ -40,7 +42,7 @@ public class ChoicePan extends VBox {
 		hbPath.setAlignment(Pos.CENTER);
 		hbPath.setPadding(new Insets(10.));
 		
-		//Choix du fichier d'entrée pour création de l'annuaire
+		//Choix du fichier d'entrï¿½e pour crï¿½ation de l'annuaire
 		btnBrowse.setOnAction(new EventHandler<ActionEvent>() {
 
 		@Override
@@ -55,31 +57,31 @@ public class ChoicePan extends VBox {
 			
 		}
 	});
-		//Fait appel à la méthode création d'un annuaire
+		//Fait appel ï¿½ la mï¿½thode crï¿½ation d'un annuaire
 		btnOk.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				File origin = new File(lblFile.getText());
-				CreationAnnuaire annuaire = new CreationAnnuaire(origin);	//Modifier la class
-				annuaire.createInternsBDDFile();
+//				CreationAnnuaire annuaire = new CreationAnnuaire(origin);	//Modifier la class
+//				annuaire.createInternsBDDFile();
 			}
 		});
 		
 		hbBin = new HBox();
-		lblInfo2 = new Label("Veuillez sélectionner un annuaire :");
+		lblInfo2 = new Label("Veuillez sï¿½lectionner un annuaire :");
 		btnBrowse2 = new Button("Rechercher");
 		hbBin.getChildren().addAll(lblInfo2, btnBrowse2);
 		hbBin.setAlignment(Pos.CENTER);
 		hbBin.setPadding(new Insets(10.));
 		
-		//Choix d'un annuaire à partir d'un fichier binaire
+		//Choix d'un annuaire ï¿½ partir d'un fichier binaire
 		btnBrowse2.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				FileChooser fileChooser2 = new FileChooser();
-				//Mettre à jour en fonction du dossier où sont enregistrer les fichiers binaire
+				//Mettre Ã  jour en fonction du dossier oÃ¹ sont enregistrer les fichiers binaire
 				File init = new File("C:/Users/formation/Documents");		
 				fileChooser2.setInitialDirectory(init);
 				File file = fileChooser2.showOpenDialog(new Stage().getOwner());
@@ -98,19 +100,30 @@ public class ChoicePan extends VBox {
 
 			@Override
 			public void handle(ActionEvent event) {
-				File annuaire = new File(lblFileBin.getText());
-				//Donner cet annuaire au TableView
-				
-				
-				
-				MainPannel root = new MainPannel();  
-				Scene scene = new Scene(root);
-				Stage stage = (Stage) getScene().getWindow();
-				stage.setTitle("Annuaire");
-				stage.setScene(scene);
+				String annuaire = lblFileBin.getText();
+				if(annuaire != null ) {
+					MainPannel root = new MainPannel();  
+					Scene scene = new Scene(root);
+					Stage stage = (Stage) getScene().getWindow();
+					stage.setTitle("Annuaire");
+					stage.setScene(scene);
+				}else {
+					error = new Label("Aucun fichier choisi, veuillez sÃ©lectionner un annuaire");
+					getChildren().add(error);
+				}			
 			}
 		});
 		
 	}
+
+
+				public Label getLblFileBin() {
+					return lblFileBin;
+				}
+
+
+				public void setLblFileBin(Label lblFileBin) {
+					this.lblFileBin = lblFileBin;
+				}
 				
 }
