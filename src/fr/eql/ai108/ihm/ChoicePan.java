@@ -28,19 +28,20 @@ public class ChoicePan extends VBox {
 	private Button btnOk2;
 	private Label error;
 
+	//Choix des HBox à revoir > Pas lisible
 
 	public ChoicePan() {
 		super();	
 
 		hbPath = new HBox();
-		lblInfo1 = new Label("Si vous n'avez pas d'annuaire, veuillez choisir un fichier source");
+		lblInfo1 = new Label("Si vous n'avez pas d'annuaire, veuillez choisir un fichier source :	");
 		btnBrowse = new Button("Rechercher");
 		btnOk = new Button("Ok");
 		hbPath.getChildren().addAll(lblInfo1, btnBrowse, btnOk);
 		hbPath.setAlignment(Pos.CENTER);
 		hbPath.setPadding(new Insets(10.));
 
-		//Choix du fichier d'entr�e pour cr�ation de l'annuaire
+		//Choix du fichier d'entr�e pour création de l'annuaire
 		btnBrowse.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -55,7 +56,7 @@ public class ChoicePan extends VBox {
 
 			}
 		});
-		//Fait appel � la m�thode cr�ation d'un annuaire
+		//Fait appel � la méthode création d'un annuaire
 		btnOk.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -67,13 +68,14 @@ public class ChoicePan extends VBox {
 		});
 
 		hbBin = new HBox();
-		lblInfo2 = new Label("Veuillez s�lectionner un annuaire :");
+		lblInfo2 = new Label("Veuillez sélectionner un annuaire :	");
 		btnBrowse2 = new Button("Rechercher");
-		hbBin.getChildren().addAll(lblInfo2, btnBrowse2);
+		btnOk2 = new Button("Ok");
+		hbBin.getChildren().addAll(lblInfo2, btnBrowse2, btnOk2);
 		hbBin.setAlignment(Pos.CENTER);
 		hbBin.setPadding(new Insets(10.));
 
-		//Choix d'un annuaire � partir d'un fichier binaire
+		//Choix d'un annuaire à partir d'un fichier binaire
 		btnBrowse2.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -88,30 +90,33 @@ public class ChoicePan extends VBox {
 					lblFileBin.setText(file.getAbsolutePath());
 					hbBin.getChildren().add(lblFileBin);
 				}
-
 			}
 
 		});
 
 		//Action permettant l'affichage du MainPan
-//		btnOk2.setOnAction(new EventHandler<ActionEvent>() {
-//
-//			@Override
-//			public void handle(ActionEvent event) {
-//				String annuaire = lblFileBin.getText();
-//				if(annuaire != null ) {
-//					MainPannel root = new MainPannel();  
-//					Scene scene = new Scene(root);
-//					Stage stage = (Stage) getScene().getWindow();
-//					stage.setTitle("Annuaire");
-//					stage.setScene(scene);
-//				}else {
-//					error = new Label("Aucun fichier choisi, veuillez sélectionner un annuaire");
-//					getChildren().add(error);
-//				}			
-//			}
-//		});
+		btnOk2.setOnAction(new EventHandler<ActionEvent>() {
 
+			@Override
+			public void handle(ActionEvent event) {
+				String annuaire = lblFileBin.getText();
+				if(annuaire != null ) {
+					MainPannel root = new MainPannel();  
+					Scene scene = new Scene(root);
+					Stage stage = (Stage) getScene().getWindow();
+					stage.setTitle("Annuaire");
+					stage.setScene(scene);
+				}else {
+					error = new Label("Aucun fichier choisi, veuillez sélectionner un annuaire");
+					getChildren().add(error);
+				}			
+			}
+		});
+
+		getChildren().addAll(hbPath, hbBin);
+		setPrefSize(500, 200);
+		
+		
 	}
 
 

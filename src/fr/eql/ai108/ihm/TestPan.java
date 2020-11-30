@@ -10,6 +10,7 @@ public class TestPan extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		IdentificationPannel root = new IdentificationPannel();
 		Scene scene = new Scene(root);
+		primaryStage.setTitle("Connexion");
 		primaryStage.setScene(scene);
 		primaryStage.sizeToScene();
 		primaryStage.show();

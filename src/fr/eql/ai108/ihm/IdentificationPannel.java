@@ -57,14 +57,14 @@ public class IdentificationPannel extends VBox {
 		btnLambdaUser = new Button("Utilisateur");
 		btnLambdaUser.setPrefSize(150, 100);
 		//Cr�er un compte admin
-		btnCreationAdmin = new Button("Cr�er un compte" + "\n   administrateur");
+		btnCreationAdmin = new Button("Créer un compte" + "\n   administrateur");
 		btnCreationAdmin.setPrefSize(150, 100);
 		hbButton.getChildren().addAll(btnConnexion, btnCreationAdmin, btnLambdaUser);
 		hbButton.setAlignment(Pos.BOTTOM_CENTER);
 		hbButton.setSpacing(15);
 		
 		getChildren().addAll(hbLog, hbPass, hbButton);
-		setPrefSize(600, 400);
+		setPrefSize(600, 200);
 		
 		//Fonctinnalit�s admin
 		Button deleteBtn = new Button("Supprimer");
