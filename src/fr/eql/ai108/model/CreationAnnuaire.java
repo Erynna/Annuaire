@@ -165,27 +165,32 @@ public class CreationAnnuaire {
 	}
 
 	/*
-	 * Méthode qui permet à partir d'un tableau de caractere de générer un tableau ordonné de bytes et de compléter par des bytes vides pour s'adapter aux tailles max des données
+	 * Méthode qui permet à partir d'une chaine de caractere de générer un tableau ordonné de bytes et de compléter par des bytes vides pour s'adapter aux tailles max des données
 	 */
-	public byte[] convertCharToByte(char[] data, int dataMaxLength) {
+	public byte[] completeWithEmptyBytes(String data, int dataMaxLength) {
 
-		byte[] dataInByte = new byte[dataMaxLength];
-
-		for (int i = 0; i < data.length; i++) {
-
-			dataInByte[i] = (byte) data[i];
-		}
-
-		if (data.length < dataMaxLength) {
-
-			for (int i = data.length; i < dataMaxLength; i++) {
-
-				dataInByte[i] = 0;
-
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		byte[] dataWithEmptyBytes;
+		byte[] dataInBytes = data.getBytes();
+		byte[] nullBytes = new byte[dataMaxLength - dataInBytes.length];
+		
+		try {
+			outputStream.write(dataInBytes);
+			outputStream.write(nullBytes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
-		return dataInByte;
+
+		dataWithEmptyBytes = outputStream.toByteArray();
+		
+		return dataWithEmptyBytes;
 	}
 
 	/*
@@ -193,29 +198,21 @@ public class CreationAnnuaire {
 	 */
 	public byte[] concatenateInternDatas(InternProfile internProfile) {
 
-		ByteArrayOutputStream outputStream;
+		ByteArrayOutputStream outputStream= new ByteArrayOutputStream();
 		byte[] fullDatas;
-		
-		char[] surname = internProfile.getSurname().toCharArray();
-		char[] firstName = internProfile.getFirstName().toCharArray();
-		char[] county = internProfile.getCounty().toCharArray();
-		char[] promotion = internProfile.getPromotion().toCharArray();
-		char[] yearStudy = String.valueOf(internProfile.getStudyYear()).toCharArray();
-
-		byte[] surnameByte = convertCharToByte(surname, maxSurnameLength);
-		byte[] firstNameByte = convertCharToByte(firstName, maxFirstNameLength);
-		byte[] countyByte = convertCharToByte(county, maxCountyLength);
-		byte[] promotionByte = convertCharToByte(promotion, maxPromotionLength);
-		byte[] yearStudyByte = convertCharToByte(yearStudy, maxYearStudyLength);
-
-		outputStream = new ByteArrayOutputStream(); 
+		byte[] surname = completeWithEmptyBytes(internProfile.getSurname(), maxSurnameLength);
+		byte[] firstName = completeWithEmptyBytes(internProfile.getFirstName(), maxFirstNameLength);
+		byte[] county = completeWithEmptyBytes(internProfile.getCounty(), maxCountyLength);
+		byte[] promotion = completeWithEmptyBytes(internProfile.getPromotion(), maxPromotionLength);
+		byte[] studyYear = completeWithEmptyBytes(String.valueOf(internProfile.getStudyYear()), maxYearStudyLength);
 		
 		try {
-			outputStream.write(surnameByte);
-			outputStream.write(firstNameByte); 
-			outputStream.write(countyByte); 
-			outputStream.write(promotionByte); 
-			outputStream.write(yearStudyByte); 
+			outputStream.write(surname);
+			outputStream.write(firstName); 
+			outputStream.write(county); 
+			outputStream.write(promotion); 
+			outputStream.write(studyYear); 
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
