@@ -1,11 +1,23 @@
 package fr.eql.ai108.ihm;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+
 import fr.eql.ai108.model.InternProfile;
+import fr.eql.ai108.model.InternProfileComparator;
+import fr.eql.ai108.model.MyClass;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -13,6 +25,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 
 public class PopUpWindowAddProfile extends GridPane {
 		
@@ -28,10 +42,13 @@ public class PopUpWindowAddProfile extends GridPane {
 		private TextField txtStudyYear;
 		private Button btnAddPopUp;
 		private HBox hBoxAdd;
+		private Stage popUpWindow;
 		
 		
 		public PopUpWindowAddProfile() {
 			super();
+			
+			ObservableList<InternProfile> observableProfiles = MyClass.getGlobalObservableProfiles();
 			
 			lblSurname = new Label("Nom :");
 			txtSurname = new TextField();
@@ -72,21 +89,37 @@ public class PopUpWindowAddProfile extends GridPane {
 				@Override
 				public void handle(ActionEvent event) {
 					String surname = txtSurname.getText().toUpperCase();
-					String firstname = txtFirstname.getText();
-					String county = txtCounty.getText();
+					String firstname = txtFirstname.getText().substring(0,1).toUpperCase() + txtFirstname.getText().substring(1).toLowerCase();
+					String county = txtCounty.getText().toUpperCase();
 					String promotion = txtPromotion.getText().toUpperCase();
 					int studyYear = Integer.parseInt(txtStudyYear.getText());
+
+					InternProfile internProfile = new InternProfile(surname, firstname, county, promotion, studyYear);
+					
+					boolean canSave = true;
+					for (InternProfile observableProfile : observableProfiles) {
+						InternProfileComparator internProfileComparator = new InternProfileComparator();
+						if(internProfileComparator.equals(internProfile, observableProfile)) {
+							canSave = false;							
+							Alert alert = new Alert(AlertType.INFORMATION);
+					        alert.setTitle("Message d'alerte");
+					        alert.setHeaderText("Attention doublon");
+					        alert.setContentText("Vous ne pouvez pas ajouter ce stagiaire car il existe déjà.");
+					        alert.showAndWait();
+							break;
+						}
+					}
+						if(canSave) {
+						observableProfiles.add(internProfile);
+						getPopUpWindow().close();					
+					} 
 						
 				
+				
 					
-					InternProfile internProfile = new InternProfile(surname, firstname, county, promotion, studyYear);
-					TableViewInternProfiles root = (TableViewInternProfiles) getScene().getRoot();
-					root.getObservableProfiles().add(internProfile);
-					//root.getObservableProfiles(). //add(internProfile);//comprendre problème console et ajouter DAO
-					
-					
-					
-					
+					//TableViewInternProfiles root = (TableViewInternProfiles) getScene().getRoot();
+					//root.getObservableProfiles().add(internProfile);
+					//root.getObservableProfiles(). //add(internProfile);//comprendre problème console et ajouter DAO					
 				}
 			});
 			
@@ -181,6 +214,14 @@ public class PopUpWindowAddProfile extends GridPane {
 
 		public void setBtnAdd(Button btnAdd) {
 			this.btnAddPopUp = btnAdd;
+		}
+
+		public Stage getPopUpWindow() {
+			return popUpWindow;
+		}
+
+		public void setPopUpWindow(Stage popUpWindow) {
+			this.popUpWindow = popUpWindow;
 		}
 		
 		
