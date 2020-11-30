@@ -9,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 public class MainPannel extends BorderPane {
 	
 	private TableViewInternProfiles tableViewInternProfiles = new TableViewInternProfiles();
-	private VBoxSearchOptions vbSearchOptions = new VBoxSearchOptions();
+	private VBoxSearchOptions vbSearchOptions = new VBoxSearchOptions(); 	//Quand sa marche remplacer par la hbox
 	
 	
 	public MainPannel() {

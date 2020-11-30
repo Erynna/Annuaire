@@ -1,7 +1,10 @@
 package fr.eql.ai108.ihm;
 
+import java.io.File;
+
 import fr.eql.ai108.model.AdminUser;
 import fr.eql.ai108.model.AdminUserDao;
+import fr.eql.ai108.model.CreationAnnuaire;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,7 +30,6 @@ public class IdentificationPannel extends VBox {
 	private HBox hbButton;
 	private TextField error;
 	
-	
 	public IdentificationPannel() {
 		super();
 		
@@ -47,7 +49,7 @@ public class IdentificationPannel extends VBox {
 		tfPassword.setPrefWidth(300);
 		hbPass.getChildren().addAll(lblPassword, tfPassword);
 		hbPass.setAlignment(Pos.TOP_CENTER);
-		hbPass.setPadding(new Insets(5.));
+		hbPass.setPadding(new Insets(5.));	
 		
 		hbButton = new HBox();
 		btnConnexion = new Button("Se connecter");
@@ -59,10 +61,10 @@ public class IdentificationPannel extends VBox {
 		btnCreationAdmin.setPrefSize(150, 100);
 		hbButton.getChildren().addAll(btnConnexion, btnCreationAdmin, btnLambdaUser);
 		hbButton.setAlignment(Pos.BOTTOM_CENTER);
-		hbButton.setPadding(new Insets(15.));
+		hbButton.setSpacing(15);
 		
 		getChildren().addAll(hbLog, hbPass, hbButton);
-		setSpacing(15);
+		setPrefSize(600, 400);
 		
 		//Fonctinnalités admin
 		Button deleteBtn = new Button("Supprimer");
@@ -75,6 +77,7 @@ public class IdentificationPannel extends VBox {
 		vbAdmin.getChildren().addAll(deleteBtn, updateBtn);
 		
 		error = new TextField("Login et/ou mot de passe incorrect");
+		
 		
 		
 		//Si connection admin
@@ -124,13 +127,11 @@ public class IdentificationPannel extends VBox {
 
 			@Override
 			public void handle(ActionEvent event) {
-				MainPannel root = new MainPannel();  
+				ChoicePan root = new ChoicePan();
 				Scene scene = new Scene(root);
 				Stage stage = (Stage) getScene().getWindow();
-				stage.setTitle("Annuaire");
-				stage.setScene(scene);
-				
-				
+				stage.setTitle("Choix de l'annuaire");
+				stage.setScene(scene);	
 			}
 		});
 	}
