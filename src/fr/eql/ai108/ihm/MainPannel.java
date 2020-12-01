@@ -8,29 +8,33 @@ import javafx.scene.layout.BorderPane;
 
 public class MainPannel extends BorderPane {
 	
-	private TableViewInternProfiles tableViewInternProfiles = new TableViewInternProfiles();
-	private VBoxSearchOptions vbSearchOptions = new VBoxSearchOptions();
+	private HBoxSearchOptions menuBox = new HBoxSearchOptions();
+	private TableViewInternProfiles tableView = new TableViewInternProfiles("./internBDD.bin");
 	
 	
 	public MainPannel() {
-		super();
-		setLeft(vbSearchOptions);
-		setCenter(tableViewInternProfiles);
+		
+		setTop(menuBox);
+		setCenter(tableView);
+		
+	}
+
+	public HBoxSearchOptions getMenuBox() {
+		return menuBox;
 	}
 
 
-	public TableViewInternProfiles getTableViewInternProfiles() {
-		return tableViewInternProfiles;
-	}
-	public void setTableViewInternProfiles(TableViewInternProfiles tableViewInternProfiles) {
-		this.tableViewInternProfiles = tableViewInternProfiles;
-	}
-	public VBoxSearchOptions getVbSearchOptions() {
-		return vbSearchOptions;
-	}
-	public void setVbSearchOptions(VBoxSearchOptions vbSearchOptions) {
-		this.vbSearchOptions = vbSearchOptions;
+	public void setMenuBox(HBoxSearchOptions menuBox) {
+		this.menuBox = menuBox;
 	}
 
 
+	public TableViewInternProfiles getTableView() {
+		return tableView;
+	}
+
+
+	public void setTableView(TableViewInternProfiles tableView) {
+		this.tableView = tableView;
+	}
 }

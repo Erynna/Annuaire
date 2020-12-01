@@ -10,14 +10,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class CreationAdminPan extends VBox {
 
-	//Méthode permettant la création d'un compte admin et l'enregistrement dans un fichier csv
+	//Mï¿½thode permettant la crï¿½ation d'un compte admin et l'enregistrement dans un fichier csv
 
 	private Label lblLogin;
 	private TextField tfLogin;
@@ -28,7 +27,7 @@ public class CreationAdminPan extends VBox {
 	private HBox hbPass;
 	private HBox hbBtn;
 	private Label lblError;
-	//	private AdminUserDao;   //création d'une dao à faire
+	//	private AdminUserDao;   //crï¿½ation d'une dao ï¿½ faire
 
 	public CreationAdminPan() {
 		setPrefSize(600, 200);
@@ -61,24 +60,24 @@ public class CreationAdminPan extends VBox {
 		getChildren().addAll(hbLog, hbPass, hbBtn);
 		setPadding(new Insets(15.));
 
-		//Création d'un compte 
+		//CrÃ©ation d'un compte		//OK
 		btnCreate.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				String login = tfLogin.getText();
 				String password = tfPassword.getText();
-	//			AdminUser admin = new AdminUser(login, password);		//Utilité  ??
+	//			AdminUser admin = new AdminUser(login, password);		//Utilitï¿½  ??
 				AdminUserDao dao =  new AdminUserDao();
 				
-				//		Apparition d'un message d'erreur si login déjà existant		
-//				if(!dao.checkLoginExistence(login)){
-//					lblError = new Label("Login déjà existant");
-//					getChildren().add(lblError);
-//				}else {
+				//		Apparition d'un message d'erreur si login dÃ©jÃ  existant	
+				if(dao.checkLoginExistence(login)){
+					lblError = new Label("Login dÃ©jÃ  existant");
+					getChildren().add(lblError);
+				}else {
 					dao.addAdminAccount(login, password);
 					
-//				}
+				}
 			}
 		});
 

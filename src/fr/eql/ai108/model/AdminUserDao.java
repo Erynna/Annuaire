@@ -22,7 +22,7 @@ public class AdminUserDao {
 			loginsBDD.createNewFile();
 
 			raf = new RandomAccessFile(loginsBDD, "rw");
-			
+
 			raf.seek(getFileLength(raf));
 
 			if(!checkLoginExistence(login)) {
@@ -93,11 +93,11 @@ public class AdminUserDao {
 					loginToCompare = raf.readUTF();
 
 					if(loginToCompare.equals(login)) {
-						
+
 						pointerPosition = raf.getFilePointer();					//Enregistrement de la position du pointeur dans une variable de classe afin de pouvoir utiliser l'information Ã  l'extÃ©rieur (rÃ©cupÃ©ration mdp)
 						loginExistence = true;
 						break;
-						
+
 					}else {
 						raf.readUTF();
 					}
@@ -125,110 +125,36 @@ public class AdminUserDao {
 		int position = 0;
 
 		try {
-			
+
 			raf.seek(0);
-			
+
 			while(raf.readLine() != null) {
 
 				position = (int) raf.getFilePointer();
 
 			}
-			
+
 			raf.seek(0);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		return position;
 	}
-	
+
 	/*
-	 * Méthode qui permet à un admin de se connecter après vérification de son login et mot de passe --- Première version
+	 * MÃ©thode qui permet de renvoyer un booleen true si les informations de connexion : login et password sont corrects, false sinon.
 	 */
 	public boolean connexion(AdminUser admin) {
-		
-		boolean adminExistence = false;
-		byte actualReadByte;
-		byte[] loginFromBDD;
-		byte[] passwordFromBDD;
-		RandomAccessFile raf = null;
-		ByteArrayOutputStream opsl = new ByteArrayOutputStream();
-		ByteArrayOutputStream opsp = new ByteArrayOutputStream();
-		String convertedLogin = "";
-		String convertedPassword = "";
-		int fileLength = 0;
 
-		try {
-			raf = new RandomAccessFile(loginsBDD, "r");
-			fileLength = getFileLength(raf);
-			if (fileLength > 0) {
-				do {
-					while ((actualReadByte = raf.readByte()) != '\r') {			//Lecture jusqu'au saut de ligne
-						while ((actualReadByte = raf.readByte()) != 0) {
-							opsl.write(actualReadByte);
-						}
-						opsp.write(actualReadByte);						
-					}
-					loginFromBDD = opsl.toByteArray();
-					opsl.reset();
-					convertedLogin = new String(loginFromBDD);
-					passwordFromBDD = opsp.toByteArray();
-					opsp.reset();
-					convertedPassword = new String(passwordFromBDD);
-					AdminUser admin1 = new AdminUser(convertedLogin, convertedPassword);
-					if(admin1.equals(admin)) {
-						pointerPosition = raf.getFilePointer();
-						adminExistence = true;
-						break;
-					}else {
-						raf.readLine();
-					}
-				} while(raf.getFilePointer() < fileLength);						//Bouclage sur la totalitÃ© du fichier
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				opsl.close();
-				opsp.close();
-				raf.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		boolean connexion = false;
+
+		if(admin.getPassword().equals(collectPassword(admin.getLogin()))) {
+			connexion = true;
 		}
-		return adminExistence;
-	}
 
-	//Deuxième version
+		return connexion;
 
-	public boolean connection(AdminUser user) {
-		RandomAccessFile raf = null;
-		boolean verification = false;
-		String txt;
-		
-		try {
-			raf = new RandomAccessFile(loginsBDD, "r");
-			if(raf.readLine() != "\r\n") {
-				txt = raf.readLine();
-				String[] info = txt.split(" ");
-				AdminUser admin = new AdminUser(info[0], info[1]);
-				if(admin.equals(user)) {
-					verification = true;
-				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				raf.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}		
-		return verification;
 	}
-	
 }

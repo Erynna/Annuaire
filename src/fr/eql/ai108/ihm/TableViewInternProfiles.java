@@ -1,10 +1,8 @@
 package fr.eql.ai108.ihm;
 
-import java.util.ArrayList;
 import java.util.List;
 import fr.eql.ai108.model.InternProfile;
 import fr.eql.ai108.model.InternProfileDao;
-import fr.eql.ai108.model.MyClass;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -14,22 +12,23 @@ import javafx.scene.layout.AnchorPane;
 
 
 public class TableViewInternProfiles extends AnchorPane {
-	
+
 	private ObservableList<InternProfile> observableProfiles;
 	private TableView<InternProfile> tableView;
 	private List<InternProfile> profiles;
 	private InternProfile internProfile;
-	
-	
-public TableViewInternProfiles() {
-		super();
-		InternProfileDao dao = new InternProfileDao();
 
-		//ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(dao.getAll);
+	@SuppressWarnings("unchecked")
+	public TableViewInternProfiles(String annuaire) {
+		super();
+
+		//Récupération du chemin du fichier choisi dans le panneau précédent
+		ChoicePan choicePan = new ChoicePan();
 		
-		ObservableList<InternProfile> observableProfiles = MyClass.getGlobalObservableProfiles(); //Test
-		
-		TableView<InternProfile> tableView = new TableView<InternProfile>(observableProfiles);
+		//choicePan.getLblFileBin().getText();
+		InternProfileDao dao = new InternProfileDao(annuaire);
+		observableProfiles = FXCollections.observableArrayList(dao.getAll());
+		tableView = new TableView<InternProfile>(observableProfiles);
 		
 		TableColumn<InternProfile, String> colSurName = new TableColumn<InternProfile, String>("Nom");
 		colSurName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("surname"));
@@ -41,82 +40,54 @@ public TableViewInternProfiles() {
 		colPromotion.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("promotion"));
 		TableColumn<InternProfile, Integer> colStudyYear = new TableColumn<InternProfile, Integer>("Année");
 		colStudyYear.setCellValueFactory(new PropertyValueFactory<InternProfile, Integer>("studyYear"));
-		
+
 		tableView.getColumns().addAll(colSurName, colFirstName, colCounty, colPromotion, colStudyYear);
-		
+
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		
-		
+
+
 		getChildren().add(tableView);
 		setPrefSize(800, 500);
+		
 		AnchorPane.setBottomAnchor(tableView, 5.);
 		AnchorPane.setLeftAnchor(tableView, 5.);
 		AnchorPane.setRightAnchor(tableView, 5.);
 		AnchorPane.setTopAnchor(tableView, 5.);
-		
-		
-	
-		
-			
 
 	}
 
-
-
-public ObservableList<InternProfile> getObservableProfiles() {
-	return observableProfiles;
-}
-
-
-
-public void setObservableProfiles(ObservableList<InternProfile> observableProfiles) {
-	this.observableProfiles = observableProfiles;
-}
-
-
-
-public TableView<InternProfile> getTableView() {
-	return tableView;
-}
-
-
-
-public void setTableView(TableView<InternProfile> tableView) {
-	this.tableView = tableView;
-}
-
-
-
-public List<InternProfile> getProfiles() {
-	return profiles;
-}
-
-
-
-public void setProfiles(List<InternProfile> profiles) {
-	this.profiles = profiles;
-}
-
-
-
-public InternProfile getInternProfile() {
-	return internProfile;
-}
-
-
-
-public void setInternProfile(InternProfile internProfile) {
-	this.internProfile = internProfile;
-}
-
-
-
-		
-	
-		
-	
-
-
+	public ObservableList<InternProfile> getObservableProfiles() {
+		return observableProfiles;
 	}
+
+	public void setObservableProfiles(ObservableList<InternProfile> observableProfiles) {
+		this.observableProfiles = observableProfiles;
+	}
+
+	public TableView<InternProfile> getTableView() {
+		return tableView;
+	}
+
+	public void setTableView(TableView<InternProfile> tableView) {
+		this.tableView = tableView;
+	}
+
+	public List<InternProfile> getProfiles() {
+		return profiles;
+	}
+
+	public void setProfiles(List<InternProfile> profiles) {
+		this.profiles = profiles;
+	}
+
+	public InternProfile getInternProfile() {
+		return internProfile;
+	}
+
+	public void setInternProfile(InternProfile internProfile) {
+		this.internProfile = internProfile;
+	}
+
+}
 
 

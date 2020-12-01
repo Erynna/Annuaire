@@ -13,16 +13,15 @@ import java.io.RandomAccessFile;
  */
 public class CreationAnnuaire {
 
-	private final String originalFilePath = "./stagiaires.txt";
-	private final String internBDDPath = "./internBDD.bin";
+	private final String originalFilePath;
 	private int maxSurnameLength = 0;
 	private int maxFirstNameLength = 0;
 	private int maxCountyLength = 0;
 	private int maxPromotionLength = 0;
 	private int maxYearStudyLength = 4;
 
-	public CreationAnnuaire() {
-		super();
+	public CreationAnnuaire(String originalFilePath) {
+		this.originalFilePath = originalFilePath;
 	}
 
 	/*
@@ -138,13 +137,12 @@ public class CreationAnnuaire {
 	/*
 	 * Méthode qui permet récursivement de créer le fichier optimisé composé des informations stagiaires ainsi que les position des enfants gauches et droits
 	 */
-	public void createInternsBDDFile() {
+	public void createInternsBDDFile(File internBDD) {
 
-		File internBDD = new File(internBDDPath);
 		RandomAccessFile raf = null;
 
 		try {
-
+			
 			internBDD.createNewFile();
 
 			raf = new RandomAccessFile(internBDD, "rw");
@@ -165,57 +163,18 @@ public class CreationAnnuaire {
 	}
 
 	/*
-	 * Méthode qui permet à partir d'un tableau de caractere de générer un tableau ordonné de bytes et de compléter par des bytes vides pour s'adapter aux tailles max des données
+	 * Méthode qui permet à partir d'une chaine de caractere de générer un tableau ordonné de bytes et de compléter par des bytes vides pour s'adapter aux tailles max des données
 	 */
-	public byte[] convertCharToByte(char[] data, int dataMaxLength) {
+	public byte[] completeWithEmptyBytes(String data, int dataMaxLength) {
 
-		byte[] dataInByte = new byte[dataMaxLength];
-
-		for (int i = 0; i < data.length; i++) {
-
-			dataInByte[i] = (byte) data[i];
-		}
-
-		if (data.length < dataMaxLength) {
-
-			for (int i = data.length; i < dataMaxLength; i++) {
-
-				dataInByte[i] = 0;
-
-			}
-		}
-
-		return dataInByte;
-	}
-
-	/*
-	 * Méthode qui permet de concatener l'ensemble des donnees presentes dans les differents tableaux de bytes sous la forme d'un seul et unique tableau de byte
-	 */
-	public byte[] concatenateInternDatas(InternProfile internProfile) {
-
-		ByteArrayOutputStream outputStream;
-		byte[] fullDatas;
-		
-		char[] surname = internProfile.getSurname().toCharArray();
-		char[] firstName = internProfile.getFirstName().toCharArray();
-		char[] county = internProfile.getCounty().toCharArray();
-		char[] promotion = internProfile.getPromotion().toCharArray();
-		char[] yearStudy = String.valueOf(internProfile.getStudyYear()).toCharArray();
-
-		byte[] surnameByte = convertCharToByte(surname, maxSurnameLength);
-		byte[] firstNameByte = convertCharToByte(firstName, maxFirstNameLength);
-		byte[] countyByte = convertCharToByte(county, maxCountyLength);
-		byte[] promotionByte = convertCharToByte(promotion, maxPromotionLength);
-		byte[] yearStudyByte = convertCharToByte(yearStudy, maxYearStudyLength);
-
-		outputStream = new ByteArrayOutputStream(); 
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		byte[] dataWithEmptyBytes;
+		byte[] dataInBytes = data.getBytes();
+		byte[] nullBytes = new byte[dataMaxLength - dataInBytes.length];
 		
 		try {
-			outputStream.write(surnameByte);
-			outputStream.write(firstNameByte); 
-			outputStream.write(countyByte); 
-			outputStream.write(promotionByte); 
-			outputStream.write(yearStudyByte); 
+			outputStream.write(dataInBytes);
+			outputStream.write(nullBytes);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -226,7 +185,37 @@ public class CreationAnnuaire {
 			}
 		}
 
-		fullDatas = outputStream.toByteArray(); 
+
+		dataWithEmptyBytes = outputStream.toByteArray();
+		
+		return dataWithEmptyBytes;
+	}
+
+	/*
+	 * Méthode qui permet de concatener l'ensemble des donnees presentes dans les differents tableaux de bytes sous la forme d'un seul et unique tableau de byte
+	 */
+	public byte[] concatenateInternDatas(InternProfile internProfile) {
+
+		ByteArrayOutputStream outputStream= new ByteArrayOutputStream();
+		byte[] fullDatas = null;
+		
+		try {
+			outputStream.write(completeWithEmptyBytes(internProfile.getSurname(), maxSurnameLength));
+			outputStream.write(completeWithEmptyBytes(internProfile.getFirstName(), maxFirstNameLength)); 
+			outputStream.write(completeWithEmptyBytes(internProfile.getCounty(), maxCountyLength)); 
+			outputStream.write(completeWithEmptyBytes(internProfile.getPromotion(), maxPromotionLength)); 
+			outputStream.write(completeWithEmptyBytes(String.valueOf(internProfile.getStudyYear()), maxYearStudyLength)); 
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fullDatas = outputStream.toByteArray();
+				outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		return fullDatas;
 	}
