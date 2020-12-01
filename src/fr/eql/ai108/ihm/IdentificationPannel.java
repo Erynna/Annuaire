@@ -1,10 +1,7 @@
 package fr.eql.ai108.ihm;
 
-import java.io.File;
-
 import fr.eql.ai108.model.AdminUser;
 import fr.eql.ai108.model.AdminUserDao;
-import fr.eql.ai108.model.CreationAnnuaire;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -17,6 +14,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/*
+ * Ce panneau permet de se connecter en tant qu'utilisateur ou administrateur. Il est possible également de créer un compte administrateur.
+ */
+
 public class IdentificationPannel extends VBox {
 	private Label lblLogin;
 	private TextField tfLogin;
@@ -28,7 +29,7 @@ public class IdentificationPannel extends VBox {
 	private Button btnConnexion;
 	private Button btnCreationAdmin;
 	private HBox hbButton;
-	private TextField error;
+	private Label error;
 	
 	public IdentificationPannel() {
 		super();
@@ -56,7 +57,6 @@ public class IdentificationPannel extends VBox {
 		btnConnexion.setPrefSize(150, 100);
 		btnLambdaUser = new Button("Utilisateur");
 		btnLambdaUser.setPrefSize(150, 100);
-		//Cr�er un compte admin
 		btnCreationAdmin = new Button("Créer un compte" + "\n   administrateur");
 		btnCreationAdmin.setPrefSize(150, 100);
 		hbButton.getChildren().addAll(btnConnexion, btnCreationAdmin, btnLambdaUser);
@@ -66,21 +66,19 @@ public class IdentificationPannel extends VBox {
 		getChildren().addAll(hbLog, hbPass, hbButton);
 		setPrefSize(600, 200);
 		
-		//Fonctinnalit�s admin
+		//Fonctinnalités administrateurs
 		Button deleteBtn = new Button("Supprimer");
 		deleteBtn.setPrefSize(100, 30);
-		
 		Button updateBtn = new Button("MàJ");
 		updateBtn.setPrefSize(100, 30);
+		HBox hbAdmin = new HBox();
+		hbAdmin.getChildren().addAll(deleteBtn, updateBtn);
 		
-		VBox vbAdmin = new VBox();
-		vbAdmin.getChildren().addAll(deleteBtn, updateBtn);
+		error = new Label("Login et/ou mot de passe incorrect");	
 		
-		error = new TextField("Login et/ou mot de passe incorrect");
-		
-		
-		
-		//Si connection admin			//OK sans l'ajout des boutons au tableview
+		/*
+		 * Cette action permet de se connecter en tant qu'administrateur et de pouvoir accéder à plus de fonctionnalités
+		 */
 		btnConnexion.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -93,18 +91,12 @@ public class IdentificationPannel extends VBox {
 				verification = dao.connexion(admin);
 				//Si login et mot de passe correct
 				if (verification) {
-					//Ajout des fonctionnalités administrateur  --> Vérification à faire
-//					MainPannel main = new MainPannel();
-//					main.getVbSearchOptions().getChildren().add(vbAdmin);
-					
-					//Affichage du panneau choix de l'annaire
-					ChoicePan root = new ChoicePan();
+					MainPannel root = new MainPannel();
+					root.getHbSearchOptions().getChildren().add(hbAdmin);
 					Scene scene = new Scene(root);
-					Stage stage = new Stage();
-					stage.setTitle("Choix de l'annuaire");
+					Stage stage = (Stage) getScene().getWindow();
+					stage.setTitle("Annuaire");
 					stage.setScene(scene);
-					stage.show();
-					
 				//Sinon affichage d'un message d'erreur
 				}else {
 					getChildren().add(error);
@@ -112,7 +104,9 @@ public class IdentificationPannel extends VBox {
 			}
 		});
 		
-		//Si création d'un compte admin, ouverture d'un autre panneau	//OK
+		/*
+		 * Cette action permet l'ouverture d'une nouvelle fenêtre afin de créer un compte administrateur
+		 */
 		btnCreationAdmin.setOnAction(new EventHandler<ActionEvent>() {
 			
 			public void handle(ActionEvent event) {
@@ -125,22 +119,24 @@ public class IdentificationPannel extends VBox {
 			}
 		});
 		
-		//Connexion en tant qu'utilisateur -> affichage du panneau choix de l'annuaire
+		/*
+		 * Cette action permet la connection au logiciel en tant qu'utilisateur
+		 */
 		btnLambdaUser.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
-				ChoicePan root = new ChoicePan();
+				MainPannel root = new MainPannel();
 				Scene scene = new Scene(root);
-				Stage stage = new Stage();
-				stage.setTitle("Choix de l'annuaire");
+				Stage stage = (Stage) getScene().getWindow();
+				stage.setTitle("Annuaire");
 				stage.setScene(scene);
-				stage.show();
 			}
 		});
+		
+
 	}
-
-
+	
 
 
 	public Label getLblLogin() {
@@ -203,21 +199,11 @@ public class IdentificationPannel extends VBox {
 	public void setHbButton(HBox hbButton) {
 		this.hbButton = hbButton;
 	}
-
-
-
-
-	public TextField getError() {
+	public Label getError() {
 		return error;
 	}
-
-
-
-
-	public void setError(TextField error) {
+	public void setLabel(Label error) {
 		this.error = error;
 	}
-
-	
 
 }

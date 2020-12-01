@@ -1,5 +1,11 @@
 package fr.eql.ai108.ihm;
 
+import java.io.File;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
 /*
@@ -7,17 +13,38 @@ import javafx.scene.layout.BorderPane;
  */
 
 public class MainPannel extends BorderPane {
-	
-	private TableViewInternProfiles tableViewInternProfiles = new TableViewInternProfiles();
-	private VBoxSearchOptions vbSearchOptions = new VBoxSearchOptions(); 	//Quand sa marche remplacer par la hbox
-	
+		
+	private TableViewInternProfiles tableViewInternProfiles;
+	private HBoxSearchOptions hbSearchOptions = new HBoxSearchOptions();
+	private Label lblTV = new Label("L'annuaire n'existe pas");
+	private Button btnR = new Button("Rafraichir");
 	
 	public MainPannel() {
 		super();
-		setLeft(vbSearchOptions);
-		setCenter(tableViewInternProfiles);
+		setPrefSize(1000, 700);
+		setTop(hbSearchOptions);
+		setBottom(btnR);
+		
+		//Ajout du TableView
+		File annuaire = new File("./internBDD.bin");
+		if(annuaire.exists()) {
+			tableViewInternProfiles = new TableViewInternProfiles();
+			setCenter(tableViewInternProfiles);
+		}else {
+			setCenter(lblTV);
+		}
+		
+		btnR.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				if(annuaire.exists()) {
+					tableViewInternProfiles = new TableViewInternProfiles();
+					setCenter(tableViewInternProfiles);
+				}
+			}
+		});
 	}
-
 
 	public TableViewInternProfiles getTableViewInternProfiles() {
 		return tableViewInternProfiles;
@@ -25,12 +52,11 @@ public class MainPannel extends BorderPane {
 	public void setTableViewInternProfiles(TableViewInternProfiles tableViewInternProfiles) {
 		this.tableViewInternProfiles = tableViewInternProfiles;
 	}
-	public VBoxSearchOptions getVbSearchOptions() {
-		return vbSearchOptions;
+	public HBoxSearchOptions getHbSearchOptions() {
+		return hbSearchOptions;
 	}
-	public void setVbSearchOptions(VBoxSearchOptions vbSearchOptions) {
-		this.vbSearchOptions = vbSearchOptions;
+	public void setHbSearchOptions(HBoxSearchOptions hbSearchOptions) {
+		this.hbSearchOptions = hbSearchOptions;
 	}
-
 
 }

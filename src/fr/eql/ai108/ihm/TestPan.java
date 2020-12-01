@@ -14,8 +14,6 @@ public class TestPan extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.sizeToScene();
 		primaryStage.show();
-		
-
 	}
 
 	public static void main(String[] args) {

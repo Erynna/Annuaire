@@ -21,8 +21,6 @@ public class VBoxSearchOptions extends VBox {
 	
 		public VBoxSearchOptions() {
 		super();
-	
-		
 		
 		setSpacing(10);
 		//root.setPadding(new Insets(10,10,10,10));
@@ -52,6 +50,7 @@ public class VBoxSearchOptions extends VBox {
 		});
 		
 		getChildren().addAll(textField, searchBtn, addBtn);
+		setSpacing(5.);
 		
 		}
 

@@ -13,7 +13,8 @@ import java.io.RandomAccessFile;
  */
 public class CreationAnnuaire {
 
-	private final String originalFilePath = "./stagiaires.txt";
+	private final String originalFilePath;
+	//= "./stagiaires.txt";
 	private final String internBDDPath = "./internBDD.bin";
 	private int maxSurnameLength = 0;
 	private int maxFirstNameLength = 0;
@@ -21,8 +22,8 @@ public class CreationAnnuaire {
 	private int maxPromotionLength = 0;
 	private int maxYearStudyLength = 4;
 
-	public CreationAnnuaire() {
-		super();
+	public CreationAnnuaire(String originalFilePath) {
+		this.originalFilePath = originalFilePath;
 	}
 
 	/*

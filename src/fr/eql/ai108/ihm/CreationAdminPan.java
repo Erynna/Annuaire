@@ -1,22 +1,21 @@
 package fr.eql.ai108.ihm;
 
-import fr.eql.ai108.model.AdminUser;
 import fr.eql.ai108.model.AdminUserDao;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+
+/*
+ * Ce panneau permet la création d'un compte administrateur. Les informations sont stockés dans un fichier binaire.
+ */
 
 public class CreationAdminPan extends VBox {
-
-	//M�thode permettant la cr�ation d'un compte admin et l'enregistrement dans un fichier csv
 
 	private Label lblLogin;
 	private TextField tfLogin;
@@ -27,7 +26,7 @@ public class CreationAdminPan extends VBox {
 	private HBox hbPass;
 	private HBox hbBtn;
 	private Label lblError;
-	//	private AdminUserDao;   //cr�ation d'une dao � faire
+	private Label creationOk;
 
 	public CreationAdminPan() {
 		setPrefSize(600, 200);
@@ -59,24 +58,26 @@ public class CreationAdminPan extends VBox {
 
 		getChildren().addAll(hbLog, hbPass, hbBtn);
 		setPadding(new Insets(15.));
+		
+		lblError = new Label("Login déjà existant");
 
-		//Création d'un compte		//OK
 		btnCreate.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				String login = tfLogin.getText();
 				String password = tfPassword.getText();
-	//			AdminUser admin = new AdminUser(login, password);		//Utilit�  ??
 				AdminUserDao dao =  new AdminUserDao();
 				
-				//		Apparition d'un message d'erreur si login déjà existant	
+				//Apparition d'un message d'erreur si login déjà existant	
 				if(dao.checkLoginExistence(login)){
-					lblError = new Label("Login déjà existant");
 					getChildren().add(lblError);
+					//reset du lbl
+	//				lblError
 				}else {
 					dao.addAdminAccount(login, password);
-					
+					creationOk = new Label("Votre compte administrateur a bien été créer");
+					getChildren().add(creationOk);
 				}
 			}
 		});
