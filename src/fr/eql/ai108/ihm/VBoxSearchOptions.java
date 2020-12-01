@@ -7,8 +7,9 @@ import fr.eql.ai108.model.InternProfileDao;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -16,16 +17,17 @@ import javafx.scene.layout.VBox;
 public class VBoxSearchOptions extends VBox {
 
 	private Label title = new Label();
+	private VBox bottomPane = new VBox();
 	private Label labelSurname = new Label("Nom");
-	private TextField textFieldSurname = new TextField("");
+	private TextField textFieldSurname = new TextField(null);
 	private Label labelFirstName = new Label("Prénom");
-	private TextField textFieldFirstName = new TextField("");
+	private TextField textFieldFirstName = new TextField(null);
 	private Label labelCounty = new Label("Département");
-	private TextField textFieldCounty = new TextField("");
+	private TextField textFieldCounty = new TextField(null);
 	private Label labelPromotion = new Label("Promotion");
-	private TextField textFieldPromotion = new TextField("");
+	private TextField textFieldPromotion = new TextField(null);
 	private Label labelYearStudy = new Label("Année");
-	private ChoiceBox<Integer> cbYearStudy = new ChoiceBox<Integer>();
+	private ComboBox<Integer> cbYearStudy = new ComboBox<Integer>();
 	private Button searchBtn = new Button("Rechercher");
 	private Button resetBtn = new Button("Réinitialiser les champs");
 	private Button addBtn = new Button("Ajouter");
@@ -40,22 +42,26 @@ public class VBoxSearchOptions extends VBox {
 			cbYearStudy.getItems().add(i);
 		}
 		
+		bottomPane.getChildren().addAll(searchBtn, resetBtn);
 		getChildren().add(title);
 		getChildren().addAll(labelSurname, textFieldSurname);
 		getChildren().addAll(labelFirstName, textFieldFirstName);
 		getChildren().addAll(labelCounty, textFieldCounty);
 		getChildren().addAll(labelPromotion, textFieldPromotion);
 		getChildren().addAll(labelYearStudy, cbYearStudy);
-		getChildren().add(searchBtn);
-		getChildren().add(resetBtn);
+		getChildren().add(bottomPane);
 
 		setSpacing(10);
 		setPadding(new Insets(5));
+		
+		VBox.setMargin(searchBtn, new Insets(50, 0, 20, 0));
+		bottomPane.setAlignment(Pos.CENTER);
 
-		title.setStyle("-fx-font-size: 20");
+		title.setStyle("-fx-font-size: 20; -fx-font-weight: bold");
 		textFieldSurname.setPrefWidth(200);
 		searchBtn.setPrefSize(150, 30);
 		resetBtn.setPrefSize(150, 30);
+		cbYearStudy.setVisibleRowCount(5);
 
 		searchBtn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -65,18 +71,14 @@ public class VBoxSearchOptions extends VBox {
 				MainPannel root = (MainPannel) getScene().getRoot();
 				InternProfileDao dao = new InternProfileDao();
 
-				System.out.println(textFieldSurname.getText());
-				System.out.println(textFieldFirstName.getText());
-				System.out.println(textFieldCounty.getText());
-				System.out.println(textFieldPromotion.getText());
-				System.out.println(cbYearStudy.getValue());
+				int checkBoxYearStudy = 0;
 				
-				List<InternProfile> filteredProfiles = dao.filterSearchInternProfile(textFieldSurname.getText(), textFieldFirstName.getText(), textFieldCounty.getText(), textFieldPromotion.getText(), cbYearStudy.getValue());
-				
-				for (InternProfile internProfile : filteredProfiles) {
-					System.out.println(internProfile);
+				if (cbYearStudy.getValue() != null) {
+					checkBoxYearStudy = cbYearStudy.getValue();
 				}
 				
+				List<InternProfile> filteredProfiles = dao.filterSearchInternProfile(textFieldSurname.getText(), textFieldFirstName.getText(), textFieldCounty.getText(), textFieldPromotion.getText(), checkBoxYearStudy);
+
 				TableViewInternProfiles tableViewFiltered = new TableViewInternProfiles(filteredProfiles);
 				root.setCenter(tableViewFiltered);
 			}
@@ -88,10 +90,10 @@ public class VBoxSearchOptions extends VBox {
 			public void handle(ActionEvent event) {
 
 				MainPannel root = (MainPannel) getScene().getRoot();
-				getTextFieldSurname().setText("");
-				getTextFieldFirstName().setText("");
-				getTextFieldCounty().setText("");
-				getTextFieldPromotion().setText("");
+				getTextFieldSurname().setText(null);
+				getTextFieldFirstName().setText(null);
+				getTextFieldCounty().setText(null);
+				getTextFieldPromotion().setText(null);
 				getCbYearStudy().setValue(null);
 				InternProfileDao dao = new InternProfileDao();
 				root.setCenter(new TableViewInternProfiles(dao.getAll()));
@@ -183,11 +185,11 @@ public class VBoxSearchOptions extends VBox {
 		this.labelYearStudy = labelYearStudy;
 	}
 
-	public ChoiceBox<Integer> getCbYearStudy() {
+	public ComboBox<Integer> getCbYearStudy() {
 		return cbYearStudy;
 	}
 
-	public void setCbYearStudy(ChoiceBox<Integer> cbYearStudy) {
+	public void setCbYearStudy(ComboBox<Integer> cbYearStudy) {
 		this.cbYearStudy = cbYearStudy;
 	}
 

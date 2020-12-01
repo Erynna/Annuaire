@@ -15,7 +15,7 @@ import javafx.scene.control.TextField;
  */
 public class InternProfileDao {
 
-	private String internBDD ="./internBDD.bin";
+	private String internBDD = "./internBDD.bin";
 	private final int byteForLeftChild = 0;   			// désigne l'emplacement du 1er byte où est inscrite la position de l'enfant gauche
 	private final int numberOfBytesForLeftChild = 4;	// désigne le nombre de bytes réservés pour inscrire la position de l'enfant gauche
 	private final int byteForRightChild = 4;  			// désigne l'emplacement du 1er byte où est inscrite la position de l'enfant droit
@@ -548,27 +548,27 @@ public class InternProfileDao {
 		List<InternProfile> returnedProfiles = new ArrayList<InternProfile>();
 		
 		for (InternProfile internProfile : internProfiles) {
-			if (surname != ".") {
-				if (!internProfile.getSurname().contains(surname.toUpperCase())) {
+			if (surname != null) {
+				if (!internProfile.getSurname().toUpperCase().contains(surname.toUpperCase())) {
 					continue;
 				}					
 			}
-			if (firstName != "") {
-				if (!internProfile.getFirstName().contains(firstName/*firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase()*/)) {
+			if (firstName != null) {
+				if (!internProfile.getFirstName().toUpperCase().contains(firstName.toUpperCase())) {
 					continue;
 				}					
 			}
-			if (county != "") {
-				if (!internProfile.getCounty().contains(county.toUpperCase())) {
+			if (county != null) {
+				if (!internProfile.getCounty().toUpperCase().contains(county.toUpperCase())) {
 					continue;
 				}					
 			}
-			if (promotion != "") {
-				if (!internProfile.getPromotion().contains(promotion.toUpperCase())) {
+			if (promotion != null) {
+				if (!internProfile.getPromotion().toUpperCase().contains(promotion.toUpperCase())) {
 					continue;
 				}					
 			}
-			if (String.valueOf(studyYear) != "") {
+			if (studyYear != 0) {
 				if (internProfile.getStudyYear() != (studyYear)) {
 					continue;
 				}				
