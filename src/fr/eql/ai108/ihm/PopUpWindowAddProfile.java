@@ -41,7 +41,6 @@ public class PopUpWindowAddProfile extends GridPane {
 	private Label lblStudyYear;
 	private TextField txtStudyYear;
 	private Button btnAddPopUp;
-	private HBox hBoxAdd;
 	private Stage popUpWindow;
 
 
@@ -70,54 +69,50 @@ public class PopUpWindowAddProfile extends GridPane {
 		txtStudyYear = new TextField();
 		addRow(4, lblStudyYear, txtStudyYear);
 
-
-		hBoxAdd = new HBox();
 		btnAddPopUp = new Button("Ajouter");
 		btnAddPopUp.setPrefSize(100, 50);
-		btnAddPopUp.setAlignment(Pos.CENTER);
-		hBoxAdd.getChildren().addAll(btnAddPopUp);
-		addRow(5, hBoxAdd);
-
-
+		addRow(5, btnAddPopUp);
+		setAlignment(Pos.CENTER);
 		setVgap(15);
-		setStyle("-fx-background-color: orange");
-		//setPadding(new Insets(10));
+		//setStyle("-fx-background-color: orange");
+		setPadding(new Insets(10));
 
 		btnAddPopUp.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {			
 
-				if(txtSurname == null) {
-					txtSurname.setPromptText("Veuillez entrer un nom");
-					txtSurname.setStyle("-fx-text-inner-color: red");
-				}
-				if(txtFirstname == null) {
-					txtFirstname.setPromptText("Veuillez entrer un prénom");
-					txtFirstname.setStyle("-fx-text-inner-color: red");
-				}
-				if(txtCounty == null) {
-					txtCounty.setPromptText("Veuillez entrer un département");
-					txtCounty.setStyle("-fx-text-inner-color: red");
-				}
-				if(txtPromotion == null) {
-					txtPromotion.setPromptText("Veuillez entrer une promotion");
-					txtPromotion.setStyle("-fx-text-inner-color: red");
-				}
-				if(txtStudyYear == null) {
-					txtStudyYear.setPromptText("Veuillez entrer une année");
-					txtStudyYear.setStyle("-fx-text-inner-color: red");
-				}				
-				else if (txtSurname != null && txtFirstname != null && txtCounty != null && txtPromotion != null && txtStudyYear != null) {
-						String surname = txtSurname.getText().toUpperCase();
-						String firstname = txtFirstname.getText().substring(0,1).toUpperCase() + txtFirstname.getText().substring(1).toLowerCase();
-						String county = txtCounty.getText().toUpperCase();
-						String promotion = txtPromotion.getText().toUpperCase();
-						int studyYear = Integer.parseInt(txtStudyYear.getText());
-					
-					
+//				if(txtSurname == null) {
+//					txtSurname.setPromptText("Veuillez entrer un nom");
+//					txtSurname.setStyle("-fx-text-inner-color: red");
+//				}
+//				if(txtFirstname == null) {
+//					txtFirstname.setPromptText("Veuillez entrer un prénom");
+//					txtFirstname.setStyle("-fx-text-inner-color: red");
+//				}
+//				if(txtCounty == null) {
+//					txtCounty.setPromptText("Veuillez entrer un département");
+//					txtCounty.setStyle("-fx-text-inner-color: red");
+//				}
+//				if(txtPromotion == null) {
+//					txtPromotion.setPromptText("Veuillez entrer une promotion");
+//					txtPromotion.setStyle("-fx-text-inner-color: red");
+//				}
+//				if(txtStudyYear == null) {
+//					txtStudyYear.setPromptText("Veuillez entrer une année");
+//					txtStudyYear.setStyle("-fx-text-inner-color: red");
+//				}				
+//				else
+					if (txtSurname != null && txtFirstname != null && txtCounty != null && txtPromotion != null && txtStudyYear != null) {
+					String surname = txtSurname.getText().toUpperCase();
+					String firstname = txtFirstname.getText().substring(0,1).toUpperCase() + txtFirstname.getText().substring(1).toLowerCase();
+					String county = txtCounty.getText().toUpperCase();
+					String promotion = txtPromotion.getText().toUpperCase();
+					int studyYear = Integer.parseInt(txtStudyYear.getText());
+
+
 					InternProfile internProfile = new InternProfile(surname, firstname, county, promotion, studyYear);
-					
+
 					boolean canSave = true;
 					for (InternProfile observableProfile : observableProfiles) {
 						InternProfileComparator internProfileComparator = new InternProfileComparator();
@@ -139,109 +134,109 @@ public class PopUpWindowAddProfile extends GridPane {
 					} 
 				}
 			}
-			});
+		});
 
 
 
-
-
-		}
-
-		public Label getLblSurname() {
-			return lblSurname;
-		}
-
-		public void setLblSurname(Label lblSurname) {
-			this.lblSurname = lblSurname;
-		}
-
-		public TextField getTxtSurname() {
-			return txtSurname;
-		}
-
-		public void setTxtSurname(TextField txtSurname) {
-			this.txtSurname = txtSurname;
-		}
-
-		public Label getLblFirstname() {
-			return lblFirstname;
-		}
-
-		public void setLblFirstname(Label lblFirstname) {
-			this.lblFirstname = lblFirstname;
-		}
-
-		public TextField getTxtFirstname() {
-			return txtFirstname;
-		}
-
-		public void setTxtFirstname(TextField txtFirstname) {
-			this.txtFirstname = txtFirstname;
-		}
-
-		public Label getLblCounty() {
-			return lblCounty;
-		}
-
-		public void setLblCounty(Label lblCounty) {
-			this.lblCounty = lblCounty;
-		}
-
-		public TextField getTxtCounty() {
-			return txtCounty;
-		}
-
-		public void setTxtCounty(TextField txtCounty) {
-			this.txtCounty = txtCounty;
-		}
-
-		public Label getLblPromotion() {
-			return lblPromotion;
-		}
-
-		public void setLblPromotion(Label lblPromotion) {
-			this.lblPromotion = lblPromotion;
-		}
-
-		public TextField getTxtPromotion() {
-			return txtPromotion;
-		}
-
-		public void setTxtPromotion(TextField txtPromotion) {
-			this.txtPromotion = txtPromotion;
-		}
-
-		public Label getLblStudyYear() {
-			return lblStudyYear;
-		}
-
-		public void setLblStudyYear(Label lblStudyYear) {
-			this.lblStudyYear = lblStudyYear;
-		}
-
-		public TextField getTxtStudyYear() {
-			return txtStudyYear;
-		}
-
-		public void setTxtStudyYear(TextField txtStudyYear) {
-			this.txtStudyYear = txtStudyYear;
-		}
-
-		public Button getBtnAdd() {
-			return btnAddPopUp;
-		}
-
-		public void setBtnAdd(Button btnAdd) {
-			this.btnAddPopUp = btnAdd;
-		}
-
-		public Stage getPopUpWindow() {
-			return popUpWindow;
-		}
-
-		public void setPopUpWindow(Stage popUpWindow) {
-			this.popUpWindow = popUpWindow;
-		}
 
 
 	}
+
+	public Label getLblSurname() {
+		return lblSurname;
+	}
+
+	public void setLblSurname(Label lblSurname) {
+		this.lblSurname = lblSurname;
+	}
+
+	public TextField getTxtSurname() {
+		return txtSurname;
+	}
+
+	public void setTxtSurname(TextField txtSurname) {
+		this.txtSurname = txtSurname;
+	}
+
+	public Label getLblFirstname() {
+		return lblFirstname;
+	}
+
+	public void setLblFirstname(Label lblFirstname) {
+		this.lblFirstname = lblFirstname;
+	}
+
+	public TextField getTxtFirstname() {
+		return txtFirstname;
+	}
+
+	public void setTxtFirstname(TextField txtFirstname) {
+		this.txtFirstname = txtFirstname;
+	}
+
+	public Label getLblCounty() {
+		return lblCounty;
+	}
+
+	public void setLblCounty(Label lblCounty) {
+		this.lblCounty = lblCounty;
+	}
+
+	public TextField getTxtCounty() {
+		return txtCounty;
+	}
+
+	public void setTxtCounty(TextField txtCounty) {
+		this.txtCounty = txtCounty;
+	}
+
+	public Label getLblPromotion() {
+		return lblPromotion;
+	}
+
+	public void setLblPromotion(Label lblPromotion) {
+		this.lblPromotion = lblPromotion;
+	}
+
+	public TextField getTxtPromotion() {
+		return txtPromotion;
+	}
+
+	public void setTxtPromotion(TextField txtPromotion) {
+		this.txtPromotion = txtPromotion;
+	}
+
+	public Label getLblStudyYear() {
+		return lblStudyYear;
+	}
+
+	public void setLblStudyYear(Label lblStudyYear) {
+		this.lblStudyYear = lblStudyYear;
+	}
+
+	public TextField getTxtStudyYear() {
+		return txtStudyYear;
+	}
+
+	public void setTxtStudyYear(TextField txtStudyYear) {
+		this.txtStudyYear = txtStudyYear;
+	}
+
+	public Button getBtnAdd() {
+		return btnAddPopUp;
+	}
+
+	public void setBtnAdd(Button btnAdd) {
+		this.btnAddPopUp = btnAdd;
+	}
+
+	public Stage getPopUpWindow() {
+		return popUpWindow;
+	}
+
+	public void setPopUpWindow(Stage popUpWindow) {
+		this.popUpWindow = popUpWindow;
+	}
+
+
+}
