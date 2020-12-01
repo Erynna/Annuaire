@@ -83,24 +83,29 @@ public class IdentificationPannel extends VBox {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				String lg = tfLogin.getText();
-				String ps = tfPassword.getText();
-				boolean verification = false;
+				String lg = tfLogin.getText().trim();
+				String ps = tfPassword.getText().trim();
 				AdminUser admin = new AdminUser(lg, ps); 	
 				AdminUserDao dao = new AdminUserDao();
-				verification = dao.connexion(admin);
-				//Si login et mot de passe correct
-				if (verification) {
-					MainPannel root = new MainPannel();
-					root.getHbSearchOptions().getChildren().add(hbAdmin);
-					Scene scene = new Scene(root);
-					Stage stage = (Stage) getScene().getWindow();
-					stage.setTitle("Annuaire");
-					stage.setScene(scene);
-				//Sinon affichage d'un message d'erreur
+				if(lg.length() != 0 && ps.length() != 0) {
+					boolean verification = false;
+					verification = dao.connexion(admin);
+					//Si login et mot de passe correct
+					if (verification) {
+						MainPannel root = new MainPannel();
+						root.getHbSearchOptions().getChildren().add(hbAdmin);
+						Scene scene = new Scene(root);
+						Stage stage = (Stage) getScene().getWindow();
+						stage.setTitle("Annuaire");
+						stage.setScene(scene);
+					//Sinon affichage d'un message d'erreur
+					}else {
+						getChildren().add(error);
+					}
 				}else {
 					getChildren().add(error);
 				}
+
 			}
 		});
 		

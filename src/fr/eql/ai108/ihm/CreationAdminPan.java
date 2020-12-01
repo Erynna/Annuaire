@@ -72,8 +72,6 @@ public class CreationAdminPan extends VBox {
 				//Apparition d'un message d'erreur si login déjà existant	
 				if(dao.checkLoginExistence(login)){
 					getChildren().add(lblError);
-					//reset du lbl
-	//				lblError
 				}else {
 					dao.addAdminAccount(login, password);
 					creationOk = new Label("Votre compte administrateur a bien été créer");
