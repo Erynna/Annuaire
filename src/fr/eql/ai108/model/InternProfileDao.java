@@ -7,6 +7,8 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.control.TextField;
+
 /*
  * Classe utilitaire qui permet de consulter, ajouter, supprimer, modifier des stagiaires dans le fichier binaire
  * passé en argument dans le constructeur.
@@ -542,7 +544,44 @@ public class InternProfileDao {
 			e.printStackTrace();
 		}
 	}
-	
-	
+	public List<InternProfile> filterSearchInternProfile (String surname, String firstName, String county, String promotion, int studyYear) {
+		List<InternProfile> internProfiles = this.getAll();
+		List<InternProfile> returnedProfiles = new ArrayList<InternProfile>();
+		
+		for (InternProfile internProfile : internProfiles) {
+			if (surname != null) {
+				if (!internProfile.getSurname().contains(surname.toUpperCase())) {
+					continue;
+				}					
+			}
+			if (firstName != null) {
+				if (!internProfile.getFirstName().contains(firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase())) {
+					continue;
+				}					
+			}
+			if (county != null) {
+				if (!internProfile.getCounty().contains(county.toUpperCase())) {
+					continue;
+				}					
+			}
+			if (promotion != null) {
+				if (!internProfile.getPromotion().contains(promotion.toUpperCase())) {
+					continue;
+				}					
+			}
+			if (String.valueOf(studyYear) != null) {
+				if (internProfile.getStudyYear() != (studyYear)) {
+					continue;
+				}				
+			}
+			returnedProfiles.add(internProfile);
+		}
+		return returnedProfiles;
+	}
 	
 }
+
+
+	
+	
+
