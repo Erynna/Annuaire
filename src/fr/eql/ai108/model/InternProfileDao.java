@@ -7,6 +7,8 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.control.TextField;
+
 /*
  * Classe utilitaire qui permet de consulter, ajouter, supprimer, modifier des stagiaires dans le fichier binaire
  * passé en argument dans le constructeur.
@@ -171,6 +173,17 @@ public class InternProfileDao {
 		return internProfiles;
 	}
 	
+	/*
+	 * Méthode qui permet de comparer les données passées en argument (surname, firstName, county, promotion, studyYear) avec
+	 * les données présentes à partir du cursorPosition
+	 * @ param : surname, firstName, county, promotion, studyYear => les données du stagiaire
+	 *           cursorPosition : la position du curseur à partir de laquelle lire les données
+	 *           raf  : un ojet RandomAccessFile
+	 * @ return : un int qui peut être égal à :
+	 * 						- 1 si le stagiaire passé en argument en plus grand que le stagiaire à la position cursorPosition
+	 * 						- -1 si le stagiaire passé en argument en plus petit que le stagiaire à la position cursorPosition
+	 * 						- 0 s'ils sont égaux
+	 */
 	private int compare(String surname, String firstName, String county, String promotion, int studyYear, int cursorPosition, RandomAccessFile raf) {
 		int result=0;
 		try {
@@ -254,6 +267,138 @@ public class InternProfileDao {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	/*
+	 * Méthode qui permet de copier les données d'un InternProfile dans un fichier binaire à une position donnée.
+	 * @ param : - internProfile : un objet InternProfile dont on veut copier les données
+	 * 			 - raf : un objet RandomAccessFile avec lequel écrire les données
+	 * 			 - cursorPosition : la position dans le fichier à partir de laquelle écrire les données
+	 */
+	private void copyDatasInFile(InternProfile internProfile, RandomAccessFile raf, int cursorPosition) {
+		ByteArrayOutputStream outputStream;
+		byte[] fullDatas;
+		
+		char[] surname = internProfile.getSurname().toCharArray();
+		char[] firstName = internProfile.getFirstName().toCharArray();
+		char[] county = internProfile.getCounty().toCharArray();
+		char[] promotion = internProfile.getPromotion().toCharArray();
+		char[] yearStudy = String.valueOf(internProfile.getStudyYear()).toCharArray();
+
+		byte[] surnameByte = convertCharToByte(surname, numberOfBytesForSurname);
+		byte[] firstNameByte = convertCharToByte(firstName, numberOfBytesForFirstName);
+		byte[] countyByte = convertCharToByte(county, numberOfBytesForCounty);
+		byte[] promotionByte = convertCharToByte(promotion, numberOfBytesForPromotion);
+		byte[] yearStudyByte = convertCharToByte(yearStudy, numberOfBytesForStudyYear);
+
+		outputStream = new ByteArrayOutputStream(); 
+		
+		try {
+			outputStream.write(surnameByte);
+			outputStream.write(firstNameByte); 
+			outputStream.write(countyByte); 
+			outputStream.write(promotionByte); 
+			outputStream.write(yearStudyByte); 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				outputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		fullDatas = outputStream.toByteArray(); 
+		try {
+			raf.seek(cursorPosition+byteForSurname);   
+			raf.write(fullDatas);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Méthode récursive qui permet de trouver le stagiaire parent du stagiaire à ajouter, d'inscrire dans le fichier binaire
+	 * le stagiaire enfant et d'inscrire la position du stagiaire enfant dans le parent.
+	 * @ param : - les données du stagiaire à ajouter : surname, firstName, county, studyYea, promotion
+	 * 			 - cursorPosition : la position du curseur à partir de laquelle trouver le stagiaire parent
+	 * 			 - raf : un objet RandomAccessFile
+	 */
+	private void createChild(String surname, String firstName, String county, String promotion, int studyYear, int cursorPosition, RandomAccessFile raf) throws IOException {
+		// si le stagiaire à ajouter est plus petit que le stagiaire courant
+		if (compare(surname, firstName, county, promotion, studyYear, cursorPosition, raf)==-1) {
+			int pos = positionLeftChild(raf, cursorPosition);
+			// si le stagiaire courant n'a pas d'enfant gauche, on ajoute le stagiaire
+			if (pos==0) {
+				int positionToWrite = findFirstEmptyLine(raf);
+				raf.seek(cursorPosition+byteForLeftChild);
+				raf.writeInt(positionToWrite);
+				copyDatasInFile(new InternProfile(surname, firstName, county, promotion, studyYear), raf, positionToWrite);
+				raf.seek(positionToWrite+numberOfBytesForLeftChild+numberOfBytesForRightChild+numberOfBytesForSurname+
+						numberOfBytesForFirstName+numberOfBytesForCounty+numberOfBytesForPromotion+numberOfBytesForStudyYear);
+				raf.writeBytes("\r");
+			}
+			// sinon on repète la méthode creatChild sur l'enfant gauche du stagiaire courant
+			else {
+				createChild(surname, firstName, county, promotion, studyYear, pos, raf);
+			}
+		}
+		// si le stagiaire à ajouter est plus grand que le stagiaire courant
+		else if (compare(surname, firstName, county, promotion, studyYear, cursorPosition, raf)==1) {
+			int pos = positionRightChild(raf, cursorPosition);
+			// si le stagiaire courant n'a pas d'enfant droit, on ajoute le stagiaire
+			if (pos==0) {
+				int positionToWrite = findFirstEmptyLine(raf);
+				raf.seek(cursorPosition+byteForRightChild);
+				raf.writeInt(positionToWrite);
+				copyDatasInFile(new InternProfile(surname, firstName, county, promotion, studyYear), raf, positionToWrite);
+				raf.seek(positionToWrite+numberOfBytesForLeftChild+numberOfBytesForRightChild+numberOfBytesForSurname+
+						numberOfBytesForFirstName+numberOfBytesForCounty+numberOfBytesForPromotion+numberOfBytesForStudyYear);
+				raf.writeBytes("\r");
+			}
+			// sinon on repète la méthode creatChild sur l'enfant droit du stagiaire courant
+			else {
+				createChild(surname, firstName, county, promotion, studyYear, pos, raf);
+			}
+		}
+	}
+	
+	/*
+	 * Méthode qui permet de repérer la 1ère ligne vide dans le fichier binaire
+	 * @ param : raf = un objet RandomAccessFile
+	 * @ return : un int qui désigne le 1er byte disponible pour écrire des données
+	 */
+	private int findFirstEmptyLine(RandomAccessFile raf) {
+		int pos = 0;
+		try {
+			raf.seek(pos+byteForSurname);
+			byte byteToRead = raf.readByte();
+			while (byteToRead!=0) {
+				pos +=numberOfBytesForLeftChild+numberOfBytesForRightChild+numberOfBytesForSurname+
+						numberOfBytesForFirstName+numberOfBytesForCounty+numberOfBytesForPromotion+
+						numberOfBytesForStudyYear+1;  // +1 car à la fin de chaque internProfile, ajout d'un '\r'
+			raf.seek(pos+byteForSurname);
+			byteToRead = raf.readByte();
+			}
+		} catch (IOException e) {
+			return pos;
+		}
+		return pos;
+	}
+	
+	/*
+	 * Méthode qui permet d'ajouter un objet de type InternProfile dans le fichier internBDD.
+	 * @ param : un objet de type InternProfile
+	 */
+	public void addInternProfile(InternProfile internProfile) {
+		RandomAccessFile raf = null;
+		try {
+			raf = new RandomAccessFile(internBDD, "rw");
+			createChild(internProfile.getSurname(), internProfile.getFirstName(), internProfile.getCounty(), internProfile.getPromotion(), internProfile.getStudyYear(), 0, raf);
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
 	}
 	
 	private Integer findInternProfile(String surname, String firstName, String county, String promotion, int studyYear, int cursorPosition, RandomAccessFile raf) {
@@ -347,74 +492,96 @@ public class InternProfileDao {
 		return dataInByte;
 	}
 	
-	private void copyDatasInFile(InternProfile internProfile, RandomAccessFile raf, int cursorPosition) {
-		ByteArrayOutputStream outputStream;
-		byte[] fullDatas;
+	
+	
+	private int findSmallestValue(int cursorPosition, RandomAccessFile raf) {
+	    return positionLeftChild(raf, cursorPosition) == 0 ? cursorPosition : findSmallestValue(positionLeftChild(raf, cursorPosition), raf);
+	}
+	
+	private int deleteRecursive(String surname, String firstName, String county, String promotion, int studyYear, int cursorPosition, RandomAccessFile raf) throws IOException {
+		raf.seek(cursorPosition+byteForSurname);
 		
-		char[] surname = internProfile.getSurname().toCharArray();
-		char[] firstName = internProfile.getFirstName().toCharArray();
-		char[] county = internProfile.getCounty().toCharArray();
-		char[] promotion = internProfile.getPromotion().toCharArray();
-		char[] yearStudy = String.valueOf(internProfile.getStudyYear()).toCharArray();
-
-		byte[] surnameByte = convertCharToByte(surname, numberOfBytesForSurname);
-		byte[] firstNameByte = convertCharToByte(firstName, numberOfBytesForFirstName);
-		byte[] countyByte = convertCharToByte(county, numberOfBytesForCounty);
-		byte[] promotionByte = convertCharToByte(promotion, numberOfBytesForPromotion);
-		byte[] yearStudyByte = convertCharToByte(yearStudy, numberOfBytesForStudyYear);
-
-		outputStream = new ByteArrayOutputStream(); 
+		if (raf.readByte()==0) {
+			return 0;
+		}
 		
-		try {
-			outputStream.write(surnameByte);
-			outputStream.write(firstNameByte); 
-			outputStream.write(countyByte); 
-			outputStream.write(promotionByte); 
-			outputStream.write(yearStudyByte); 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				outputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+		if (compare(surname, firstName, county, promotion, studyYear, cursorPosition, raf)==0) {
+			if (positionLeftChild(raf, cursorPosition)==0 && positionRightChild(raf, cursorPosition)==0) {
+				return 0;
+			}
+			if (positionLeftChild(raf, cursorPosition)==0) {
+				return positionRightChild(raf, cursorPosition);
+			}
+			if (positionRightChild(raf, cursorPosition)==0) {
+				return positionLeftChild(raf, cursorPosition);
+			}
+			if (positionLeftChild(raf, cursorPosition)!=0 && positionRightChild(raf, cursorPosition)!=0) {
+//				int smallestValue = findSmallestValue(positionRightChild(raf, cursorPosition), raf);
+//				current.value = smallestValue;
+//				current.right = deleteRecursive(current.right, smallestValue);
+//				raf.seek(cursorPosition+byteForRightChild);
+//				raf.write(deleteRecursive(surname, firstName, county, promotion, studyYear, positionRightChild(raf, cursorPosition), smallestValue), raf);
+//				return current;
 			}
 		}
-
-		fullDatas = outputStream.toByteArray(); 
-		try {
-			raf.seek(byteForSurname);   //!!!!!!! réfléchir à comment s'assurer que si l'ordre et la position change, ça marche quand même
-			raf.write(fullDatas);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (compare(surname, firstName, county, promotion, studyYear, cursorPosition, raf)==-1) {
+			int pos = positionLeftChild(raf, cursorPosition);
+			raf.seek(cursorPosition+byteForLeftChild);
+			raf.writeInt(deleteRecursive(surname, firstName, county, promotion, studyYear, pos, raf));
 		}
+		int pos = positionRightChild(raf, cursorPosition);
+		raf.seek(cursorPosition+byteForRightChild);
+		raf.writeInt(deleteRecursive(surname, firstName, county, promotion, studyYear, pos, raf));
+		return cursorPosition;
 	}
 	
 	public void deleteInternProfile(String surname, String firstName, String county, String promotion, int studyYear) {
 		RandomAccessFile raf = null;
 		try {
 			raf = new RandomAccessFile(internBDD, "rw");
-			Integer positionInternProfile = findInternProfile(surname, firstName, county, promotion, studyYear, 0, raf);
-			int posLeftChild = positionLeftChild(raf, positionInternProfile);
-			int posLastRightChild = findLastRightChild(posLeftChild, raf);
-			if (positionInternProfile==null) {
-				///!!!!!!!!!!!!!!!!
-			}
-			else if (positionInternProfile==posLastRightChild) {
-				//supprimer toutes les données  à posLastRightChild
-			}
-			else {
-				InternProfile internProfile = extractDatasIntern(raf, posLastRightChild);
-				//effacer les données à posLastRightChild (toutes les données y compris la position des enfants gauche et droit)
-				deleteDatas(positionInternProfile, raf, false);
-				//effacer les données à positionInternProfile (sauf les positions des enfants gauche et droit)
-				deleteDatas(posLastRightChild, raf, true);
-				//copier les données de internProfile à positionInternProfile
-				copyDatasInFile(internProfile, raf, positionInternProfile);
-			}
-		} catch (FileNotFoundException e) {
+			deleteRecursive(surname, firstName, county, promotion, studyYear, 0, raf);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	public List<InternProfile> filterSearchInternProfile (String surname, String firstName, String county, String promotion, int studyYear) {
+		List<InternProfile> internProfiles = this.getAll();
+		List<InternProfile> returnedProfiles = new ArrayList<InternProfile>();
+		
+		for (InternProfile internProfile : internProfiles) {
+			if (surname != null) {
+				if (!internProfile.getSurname().contains(surname.toUpperCase())) {
+					continue;
+				}					
+			}
+			if (firstName != null) {
+				if (!internProfile.getFirstName().contains(firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase())) {
+					continue;
+				}					
+			}
+			if (county != null) {
+				if (!internProfile.getCounty().contains(county.toUpperCase())) {
+					continue;
+				}					
+			}
+			if (promotion != null) {
+				if (!internProfile.getPromotion().contains(promotion.toUpperCase())) {
+					continue;
+				}					
+			}
+			if (String.valueOf(studyYear) != null) {
+				if (internProfile.getStudyYear() != (studyYear)) {
+					continue;
+				}				
+			}
+			returnedProfiles.add(internProfile);
+		}
+		return returnedProfiles;
+	}
 	
 }
+
+
+	
+	
+

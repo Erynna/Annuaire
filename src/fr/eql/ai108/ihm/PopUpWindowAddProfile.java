@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import fr.eql.ai108.model.InternProfile;
 import fr.eql.ai108.model.InternProfileComparator;
-import fr.eql.ai108.model.MyClass;
+import fr.eql.ai108.model.InternProfileDao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,103 +29,122 @@ import javafx.stage.Stage;
 
 
 public class PopUpWindowAddProfile extends GridPane {
-		
-		private Label lblSurname;
-		private TextField txtSurname;
-		private Label lblFirstname;
-		private TextField txtFirstname;
-		private Label lblCounty;
-		private TextField txtCounty;
-		private Label lblPromotion;
-		private TextField txtPromotion;
-		private Label lblStudyYear;
-		private TextField txtStudyYear;
-		private Button btnAddPopUp;
-		private HBox hBoxAdd;
-		private Stage popUpWindow;
-		
-		
-		public PopUpWindowAddProfile() {
-			super();
-			
-			ObservableList<InternProfile> observableProfiles = MyClass.getGlobalObservableProfiles();
-			
-			lblSurname = new Label("Nom :");
-			txtSurname = new TextField();
-			addRow(0, lblSurname, txtSurname);
-			
-			lblFirstname = new Label("Prénom :");
-			txtFirstname = new TextField();
-			addRow(1, lblFirstname, txtFirstname);
-			
-			lblCounty = new Label("Département :");
-			txtCounty = new TextField();
-			addRow(2, lblCounty, txtCounty);
-			
-			lblPromotion = new Label("Promotion :");
-			txtPromotion = new TextField();
-			addRow(3, lblPromotion, txtPromotion);
-			
-			lblStudyYear = new Label("Année :");
-			txtStudyYear = new TextField();
-			addRow(4, lblStudyYear, txtStudyYear);
-			
-		
-			
-			hBoxAdd = new HBox();
-			btnAddPopUp = new Button("Ajouter");
-			btnAddPopUp.setPrefSize(100, 50);
-			btnAddPopUp.setAlignment(Pos.CENTER);
-			hBoxAdd.getChildren().addAll(btnAddPopUp);
-			addRow(5, hBoxAdd);
-			
-			
-			setVgap(15);
-			setStyle("-fx-background-color: orange");
-			//setPadding(new Insets(10));
-			
-			btnAddPopUp.setOnAction(new EventHandler<ActionEvent>() {
-				
-				@Override
-				public void handle(ActionEvent event) {
-					String surname = txtSurname.getText().toUpperCase();
-					String firstname = txtFirstname.getText().substring(0,1).toUpperCase() + txtFirstname.getText().substring(1).toLowerCase();
-					String county = txtCounty.getText().toUpperCase();
-					String promotion = txtPromotion.getText().toUpperCase();
-					int studyYear = Integer.parseInt(txtStudyYear.getText());
 
+	private Label lblSurname;
+	private TextField txtSurname;
+	private Label lblFirstname;
+	private TextField txtFirstname;
+	private Label lblCounty;
+	private TextField txtCounty;
+	private Label lblPromotion;
+	private TextField txtPromotion;
+	private Label lblStudyYear;
+	private TextField txtStudyYear;
+	private Button btnAddPopUp;
+	private HBox hBoxAdd;
+	private Stage popUpWindow;
+
+
+	public PopUpWindowAddProfile() {
+		super();
+		InternProfileDao dao = new InternProfileDao("./internBDD.bin");
+		ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(dao.getAll());
+
+		lblSurname = new Label("Nom :");
+		txtSurname = new TextField();
+		addRow(0, lblSurname, txtSurname);
+
+		lblFirstname = new Label("Prénom :");
+		txtFirstname = new TextField();
+		addRow(1, lblFirstname, txtFirstname);
+
+		lblCounty = new Label("Département :");
+		txtCounty = new TextField();
+		addRow(2, lblCounty, txtCounty);
+
+		lblPromotion = new Label("Promotion :");
+		txtPromotion = new TextField();
+		addRow(3, lblPromotion, txtPromotion);
+
+		lblStudyYear = new Label("Année :");
+		txtStudyYear = new TextField();
+		addRow(4, lblStudyYear, txtStudyYear);
+
+
+		hBoxAdd = new HBox();
+		btnAddPopUp = new Button("Ajouter");
+		btnAddPopUp.setPrefSize(100, 50);
+		btnAddPopUp.setAlignment(Pos.CENTER);
+		hBoxAdd.getChildren().addAll(btnAddPopUp);
+		addRow(5, hBoxAdd);
+
+
+		setVgap(15);
+		setStyle("-fx-background-color: orange");
+		//setPadding(new Insets(10));
+
+		btnAddPopUp.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {			
+
+				if(txtSurname == null) {
+					txtSurname.setPromptText("Veuillez entrer un nom");
+					txtSurname.setStyle("-fx-text-inner-color: red");
+				}
+				if(txtFirstname == null) {
+					txtFirstname.setPromptText("Veuillez entrer un prénom");
+					txtFirstname.setStyle("-fx-text-inner-color: red");
+				}
+				if(txtCounty == null) {
+					txtCounty.setPromptText("Veuillez entrer un département");
+					txtCounty.setStyle("-fx-text-inner-color: red");
+				}
+				if(txtPromotion == null) {
+					txtPromotion.setPromptText("Veuillez entrer une promotion");
+					txtPromotion.setStyle("-fx-text-inner-color: red");
+				}
+				if(txtStudyYear == null) {
+					txtStudyYear.setPromptText("Veuillez entrer une année");
+					txtStudyYear.setStyle("-fx-text-inner-color: red");
+				}				
+				else if (txtSurname != null && txtFirstname != null && txtCounty != null && txtPromotion != null && txtStudyYear != null) {
+						String surname = txtSurname.getText().toUpperCase();
+						String firstname = txtFirstname.getText().substring(0,1).toUpperCase() + txtFirstname.getText().substring(1).toLowerCase();
+						String county = txtCounty.getText().toUpperCase();
+						String promotion = txtPromotion.getText().toUpperCase();
+						int studyYear = Integer.parseInt(txtStudyYear.getText());
+					
+					
 					InternProfile internProfile = new InternProfile(surname, firstname, county, promotion, studyYear);
 					
 					boolean canSave = true;
 					for (InternProfile observableProfile : observableProfiles) {
 						InternProfileComparator internProfileComparator = new InternProfileComparator();
-						if(internProfileComparator.equals(internProfile, observableProfile)) {
-							canSave = false;							
+						if(internProfileComparator.compare(internProfile, observableProfile) == 0) {
 							Alert alert = new Alert(AlertType.INFORMATION);
-					        alert.setTitle("Message d'alerte");
-					        alert.setHeaderText("Attention doublon");
-					        alert.setContentText("Vous ne pouvez pas ajouter ce stagiaire car il existe déjà.");
-					        alert.showAndWait();
+							alert.setTitle("Message d'alerte");
+							alert.setHeaderText("Attention doublon");
+							alert.setContentText("Vous ne pouvez pas ajouter ce stagiaire car il existe déjà.");
+							alert.showAndWait();
+							canSave = false;
 							break;
 						}
 					}
-						if(canSave) {
+					if(canSave) {
 						observableProfiles.add(internProfile);
-						getPopUpWindow().close();					
+						dao.addInternProfile(internProfile);				
+						getPopUpWindow().close();	
+
 					} 
-						
-				
-				
-					
-					//TableViewInternProfiles root = (TableViewInternProfiles) getScene().getRoot();
-					//root.getObservableProfiles().add(internProfile);
-					//root.getObservableProfiles(). //add(internProfile);//comprendre problème console et ajouter DAO					
 				}
+			}
 			});
-			
-			
-			
-			
+
+
+
+
+
 		}
 
 		public Label getLblSurname() {
@@ -223,6 +242,6 @@ public class PopUpWindowAddProfile extends GridPane {
 		public void setPopUpWindow(Stage popUpWindow) {
 			this.popUpWindow = popUpWindow;
 		}
-		
-		
-}
+
+
+	}

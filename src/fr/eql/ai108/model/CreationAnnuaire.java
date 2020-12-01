@@ -14,8 +14,6 @@ import java.io.RandomAccessFile;
 public class CreationAnnuaire {
 
 	private final String originalFilePath;
-	//= "./stagiaires.txt";
-	private final String internBDDPath = "./internBDD.bin";
 	private int maxSurnameLength = 0;
 	private int maxFirstNameLength = 0;
 	private int maxCountyLength = 0;
@@ -139,9 +137,8 @@ public class CreationAnnuaire {
 	/*
 	 * Méthode qui permet récursivement de créer le fichier optimisé composé des informations stagiaires ainsi que les position des enfants gauches et droits
 	 */
-	public void createInternsBDDFile() {
+	public void createInternsBDDFile(File internBDD) {
 
-		File internBDD = new File(internBDDPath);
 		RandomAccessFile raf = null;
 
 		try {
@@ -200,31 +197,25 @@ public class CreationAnnuaire {
 	public byte[] concatenateInternDatas(InternProfile internProfile) {
 
 		ByteArrayOutputStream outputStream= new ByteArrayOutputStream();
-		byte[] fullDatas;
-		byte[] surname = completeWithEmptyBytes(internProfile.getSurname(), maxSurnameLength);
-		byte[] firstName = completeWithEmptyBytes(internProfile.getFirstName(), maxFirstNameLength);
-		byte[] county = completeWithEmptyBytes(internProfile.getCounty(), maxCountyLength);
-		byte[] promotion = completeWithEmptyBytes(internProfile.getPromotion(), maxPromotionLength);
-		byte[] studyYear = completeWithEmptyBytes(String.valueOf(internProfile.getStudyYear()), maxYearStudyLength);
+		byte[] fullDatas = null;
 		
 		try {
-			outputStream.write(surname);
-			outputStream.write(firstName); 
-			outputStream.write(county); 
-			outputStream.write(promotion); 
-			outputStream.write(studyYear); 
+			outputStream.write(completeWithEmptyBytes(internProfile.getSurname(), maxSurnameLength));
+			outputStream.write(completeWithEmptyBytes(internProfile.getFirstName(), maxFirstNameLength)); 
+			outputStream.write(completeWithEmptyBytes(internProfile.getCounty(), maxCountyLength)); 
+			outputStream.write(completeWithEmptyBytes(internProfile.getPromotion(), maxPromotionLength)); 
+			outputStream.write(completeWithEmptyBytes(String.valueOf(internProfile.getStudyYear()), maxYearStudyLength)); 
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
+				fullDatas = outputStream.toByteArray();
 				outputStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
-		fullDatas = outputStream.toByteArray(); 
 
 		return fullDatas;
 	}

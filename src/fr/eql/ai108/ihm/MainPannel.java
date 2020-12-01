@@ -18,14 +18,12 @@ public class MainPannel extends BorderPane {
 	private HBoxSearchOptions hbSearchOptions = new HBoxSearchOptions();
 	private Label lblTV = new Label("L'annuaire n'existe pas");
 	private Button btnR = new Button("Rafraichir");
-//	private Button btnExport = new Button("Exporter");
 	
 	public MainPannel() {
 		super();
 		setPrefSize(1000, 700);
 		setTop(hbSearchOptions);
 		setBottom(btnR);
-//		setRight(btnExport);
 		
 		//Ajout du TableView
 		File annuaire = new File("./internBDD.bin");
@@ -46,16 +44,6 @@ public class MainPannel extends BorderPane {
 				}
 			}
 		});
-		
-		//Exporter le TableView en PDF
-//		btnExport.setOnAction(new EventHandler<ActionEvent>() {
-//
-//			@Override
-//			public void handle(ActionEvent event) {
-//				
-//					
-//			}
-//		});
 	}
 
 	public TableViewInternProfiles getTableViewInternProfiles() {
@@ -70,5 +58,17 @@ public class MainPannel extends BorderPane {
 	public void setHbSearchOptions(HBoxSearchOptions hbSearchOptions) {
 		this.hbSearchOptions = hbSearchOptions;
 	}
-
+	public Label getLblTV() {
+		return lblTV;
+	}
+	public void setLblTV(Label lblTV) {
+		this.lblTV = lblTV;
+	}
+	public Button getBtnR() {
+		return btnR;
+	}
+	public void setBtnR(Button btnR) {
+		this.btnR = btnR;
+	}
+	
 }

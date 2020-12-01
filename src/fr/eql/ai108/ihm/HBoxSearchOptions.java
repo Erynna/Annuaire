@@ -12,24 +12,21 @@ import javafx.stage.StageStyle;
 
 public class HBoxSearchOptions extends HBox {
 	
-	private TextField textField;
-	private Button searchBtn;
-	private Button addBtn;
-	private Button creationbtn;
+	private Button searchBtn = new Button("Rechercher");
+	private Button addBtn = new Button("Ajouter");
+	private Button creationbtn = new Button("Création annuaire");
 	 
 		public HBoxSearchOptions() {
 		super();	
-	//	setSpacing(10);
-		//root.setPadding(new Insets(10,10,10,10));
+		setSpacing(10);
+		setPadding(new Insets(10.));
 		
-		textField = new TextField();
-		textField.setPrefWidth(200);
 		
-		searchBtn = new Button("Rechercher");
 		searchBtn.setPrefSize(100, 30);
-		
-		addBtn = new Button("Ajouter");
 		addBtn.setPrefSize(100, 30);
+		creationbtn.setPrefSize(100, 30);
+		
+		getChildren().addAll(searchBtn, addBtn, creationbtn);
 				
 		addBtn.setOnAction(new EventHandler<ActionEvent>() {
 			
@@ -43,6 +40,21 @@ public class HBoxSearchOptions extends HBox {
 		        dialog.setScene(scene);
 		        dialog.show();
 				
+			}
+		});
+		
+		//Ajout de la fonctionnalité création d'un annuaire dans la Hbox -> ouverture d'une fenêtre
+
+		creationbtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				CreationPan root = new CreationPan();
+				Scene scene = new Scene(root);
+				Stage stage = new Stage();
+				stage.setTitle("Création de l'annuaire");
+				stage.setScene(scene);
+				stage.show();	
 			}
 		});
 //		
@@ -108,35 +120,10 @@ public class HBoxSearchOptions extends HBox {
 //			
 //			
 //		});
-		
-		//Ajout de la fonctionnalité création d'un annuaire dans la Hbox -> ouverture d'une fenêtre
-		creationbtn = new Button("Création annuaire");
-		creationbtn.setPrefSize(100, 30);
-		creationbtn.setOnAction(new EventHandler<ActionEvent>() {
 
-			@Override
-			public void handle(ActionEvent event) {
-				CreationPan root = new CreationPan();
-				Scene scene = new Scene(root);
-				Stage stage = new Stage();
-				stage.setTitle("Création de l'annuaire");
-				stage.setScene(scene);
-				stage.show();	
-			}
-		});
-		
-		
-		getChildren().addAll(textField, searchBtn, addBtn, creationbtn);
-		setPadding(new Insets(10.));
 		
 		}
 
-	public TextField getTextField() {
-		return textField;
-	}
-	public void setTextField(TextField textField) {
-		this.textField = textField;
-	}
 	public Button getSearchBtn() {
 		return searchBtn;
 	}
