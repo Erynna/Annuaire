@@ -47,6 +47,8 @@ public class CreationPan extends VBox {
 //		hbPath.setPadding(new Insets(10.));
 		getChildren().add(lblInfo1);
 		getChildren().addAll(btnBrowse, btnOk);
+		setAlignment(Pos.CENTER);
+		setPadding(new Insets(10.));
 		
 
 		//Choix du fichier d'entrée pour création de l'annuaire
