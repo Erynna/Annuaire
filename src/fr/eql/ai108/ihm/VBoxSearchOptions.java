@@ -1,189 +1,242 @@
 package fr.eql.ai108.ihm;
 
+import java.util.List;
+
+import fr.eql.ai108.model.InternProfile;
+import fr.eql.ai108.model.InternProfileDao;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 public class VBoxSearchOptions extends VBox {
-	
-	private Label search = new Label("Critères de Recherche");
+
+	private Label title = new Label();
 	private Label labelSurname = new Label("Nom");
-	private TextField textFieldSurname = new TextField();
+	private TextField textFieldSurname = new TextField("");
 	private Label labelFirstName = new Label("Prénom");
-	private TextField textFieldFirstName = new TextField();
+	private TextField textFieldFirstName = new TextField("");
 	private Label labelCounty = new Label("Département");
-	private TextField textFieldCounty = new TextField();
+	private TextField textFieldCounty = new TextField("");
 	private Label labelPromotion = new Label("Promotion");
-	private TextField textFieldPromotion = new TextField();
+	private TextField textFieldPromotion = new TextField("");
 	private Label labelYearStudy = new Label("Année");
-	private TextField textFieldYearStudy = new TextField();
+	private ChoiceBox<Integer> cbYearStudy = new ChoiceBox<Integer>();
 	private Button searchBtn = new Button("Rechercher");
+	private Button resetBtn = new Button("Réinitialiser les champs");
 	private Button addBtn = new Button("Ajouter");
-	private Button deleteBtn;
-	private Button updateBtn;
+	private Button deleteBtn = new Button("Supprimer");
+	private Button updateBtn= new Button("Actualiser");
 	private VBox vbAdmin;
-	
-		public VBoxSearchOptions() {
+
+	public VBoxSearchOptions() {
 		super();
-	
-		getChildren().add(search);
+
+		for (int i = 2000; i < 2051; i++) {
+			cbYearStudy.getItems().add(i);
+		}
+		
+		getChildren().add(title);
 		getChildren().addAll(labelSurname, textFieldSurname);
 		getChildren().addAll(labelFirstName, textFieldFirstName);
 		getChildren().addAll(labelCounty, textFieldCounty);
 		getChildren().addAll(labelPromotion, textFieldPromotion);
-		getChildren().addAll(labelYearStudy, textFieldYearStudy);
+		getChildren().addAll(labelYearStudy, cbYearStudy);
 		getChildren().add(searchBtn);
-		
+		getChildren().add(resetBtn);
+
 		setSpacing(10);
 		setPadding(new Insets(5));
 
-		search.setStyle("-fx-font-size: 20");
+		title.setStyle("-fx-font-size: 20");
 		textFieldSurname.setPrefWidth(200);
-		searchBtn.setPrefSize(200, 30);
-	
+		searchBtn.setPrefSize(150, 30);
+		resetBtn.setPrefSize(150, 30);
+
 		searchBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
+
+				MainPannel root = (MainPannel) getScene().getRoot();
+				InternProfileDao dao = new InternProfileDao();
+
+				System.out.println(textFieldSurname.getText());
+				System.out.println(textFieldFirstName.getText());
+				System.out.println(textFieldCounty.getText());
+				System.out.println(textFieldPromotion.getText());
+				System.out.println(cbYearStudy.getValue());
 				
-				//Appel de la méthode de recherche selon les textfield non vides
+				List<InternProfile> filteredProfiles = dao.filterSearchInternProfile(textFieldSurname.getText(), textFieldFirstName.getText(), textFieldCounty.getText(), textFieldPromotion.getText(), cbYearStudy.getValue());
+				
+				for (InternProfile internProfile : filteredProfiles) {
+					System.out.println(internProfile);
+				}
+				
+				TableViewInternProfiles tableViewFiltered = new TableViewInternProfiles(filteredProfiles);
+				root.setCenter(tableViewFiltered);
+			}
+		});
+
+		resetBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+
+				MainPannel root = (MainPannel) getScene().getRoot();
+				getTextFieldSurname().setText("");
+				getTextFieldFirstName().setText("");
+				getTextFieldCounty().setText("");
+				getTextFieldPromotion().setText("");
+				getCbYearStudy().setValue(null);
+				InternProfileDao dao = new InternProfileDao();
+				root.setCenter(new TableViewInternProfiles(dao.getAll()));
 
 			}
 		});
-		
+
 		setSpacing(5.);
-		
-		}
 
-		public Label getSearch() {
-			return search;
-		}
+	}
 
-		public void setSearch(Label search) {
-			this.search = search;
-		}
+	public Label getTitle() {
+		return title;
+	}
 
-		public Label getLabelSurname() {
-			return labelSurname;
-		}
+	public void setTitle(Label title) {
+		this.title = title;
+	}
 
-		public void setLabelSurname(Label labelSurname) {
-			this.labelSurname = labelSurname;
-		}
+	public Label getLabelSurname() {
+		return labelSurname;
+	}
 
-		public TextField getTextFieldSurname() {
-			return textFieldSurname;
-		}
+	public void setLabelSurname(Label labelSurname) {
+		this.labelSurname = labelSurname;
+	}
 
-		public void setTextFieldSurname(TextField textFieldSurname) {
-			this.textFieldSurname = textFieldSurname;
-		}
+	public TextField getTextFieldSurname() {
+		return textFieldSurname;
+	}
 
-		public Label getLabelFirstName() {
-			return labelFirstName;
-		}
+	public void setTextFieldSurname(TextField textFieldSurname) {
+		this.textFieldSurname = textFieldSurname;
+	}
 
-		public void setLabelFirstName(Label labelFirstName) {
-			this.labelFirstName = labelFirstName;
-		}
+	public Label getLabelFirstName() {
+		return labelFirstName;
+	}
 
-		public TextField getTextFieldFirstName() {
-			return textFieldFirstName;
-		}
+	public void setLabelFirstName(Label labelFirstName) {
+		this.labelFirstName = labelFirstName;
+	}
 
-		public void setTextFieldFirstName(TextField textFieldFirstName) {
-			this.textFieldFirstName = textFieldFirstName;
-		}
+	public TextField getTextFieldFirstName() {
+		return textFieldFirstName;
+	}
 
-		public Label getLabelCounty() {
-			return labelCounty;
-		}
+	public void setTextFieldFirstName(TextField textFieldFirstName) {
+		this.textFieldFirstName = textFieldFirstName;
+	}
 
-		public void setLabelCounty(Label labelCounty) {
-			this.labelCounty = labelCounty;
-		}
+	public Label getLabelCounty() {
+		return labelCounty;
+	}
 
-		public TextField getTextFieldCounty() {
-			return textFieldCounty;
-		}
+	public void setLabelCounty(Label labelCounty) {
+		this.labelCounty = labelCounty;
+	}
 
-		public void setTextFieldCounty(TextField textFieldCounty) {
-			this.textFieldCounty = textFieldCounty;
-		}
+	public TextField getTextFieldCounty() {
+		return textFieldCounty;
+	}
 
-		public Label getLabelPromotion() {
-			return labelPromotion;
-		}
+	public void setTextFieldCounty(TextField textFieldCounty) {
+		this.textFieldCounty = textFieldCounty;
+	}
 
-		public void setLabelPromotion(Label labelPromotion) {
-			this.labelPromotion = labelPromotion;
-		}
+	public Label getLabelPromotion() {
+		return labelPromotion;
+	}
 
-		public TextField getTextFieldPromotion() {
-			return textFieldPromotion;
-		}
+	public void setLabelPromotion(Label labelPromotion) {
+		this.labelPromotion = labelPromotion;
+	}
 
-		public void setTextFieldPromotion(TextField textFieldPromotion) {
-			this.textFieldPromotion = textFieldPromotion;
-		}
+	public TextField getTextFieldPromotion() {
+		return textFieldPromotion;
+	}
 
-		public Label getLabelYearStudy() {
-			return labelYearStudy;
-		}
+	public void setTextFieldPromotion(TextField textFieldPromotion) {
+		this.textFieldPromotion = textFieldPromotion;
+	}
 
-		public void setLabelYearStudy(Label labelYearStudy) {
-			this.labelYearStudy = labelYearStudy;
-		}
+	public Label getLabelYearStudy() {
+		return labelYearStudy;
+	}
 
-		public TextField getTextFieldYearStudy() {
-			return textFieldYearStudy;
-		}
+	public void setLabelYearStudy(Label labelYearStudy) {
+		this.labelYearStudy = labelYearStudy;
+	}
 
-		public void setTextFieldYearStudy(TextField textFieldYearStudy) {
-			this.textFieldYearStudy = textFieldYearStudy;
-		}
+	public ChoiceBox<Integer> getCbYearStudy() {
+		return cbYearStudy;
+	}
 
-		public Button getSearchBtn() {
-			return searchBtn;
-		}
+	public void setCbYearStudy(ChoiceBox<Integer> cbYearStudy) {
+		this.cbYearStudy = cbYearStudy;
+	}
 
-		public void setSearchBtn(Button searchBtn) {
-			this.searchBtn = searchBtn;
-		}
+	public Button getSearchBtn() {
+		return searchBtn;
+	}
 
-		public Button getAddBtn() {
-			return addBtn;
-		}
+	public void setSearchBtn(Button searchBtn) {
+		this.searchBtn = searchBtn;
+	}
 
-		public void setAddBtn(Button addBtn) {
-			this.addBtn = addBtn;
-		}
+	public Button getResetBtn() {
+		return resetBtn;
+	}
 
-		public Button getDeleteBtn() {
-			return deleteBtn;
-		}
+	public void setResetBtn(Button resetBtn) {
+		this.resetBtn = resetBtn;
+	}
 
-		public void setDeleteBtn(Button deleteBtn) {
-			this.deleteBtn = deleteBtn;
-		}
+	public Button getAddBtn() {
+		return addBtn;
+	}
 
-		public Button getUpdateBtn() {
-			return updateBtn;
-		}
+	public void setAddBtn(Button addBtn) {
+		this.addBtn = addBtn;
+	}
 
-		public void setUpdateBtn(Button updateBtn) {
-			this.updateBtn = updateBtn;
-		}
+	public Button getDeleteBtn() {
+		return deleteBtn;
+	}
 
-		public VBox getVbAdmin() {
-			return vbAdmin;
-		}
+	public void setDeleteBtn(Button deleteBtn) {
+		this.deleteBtn = deleteBtn;
+	}
 
-		public void setVbAdmin(VBox vbAdmin) {
-			this.vbAdmin = vbAdmin;
-		}
+	public Button getUpdateBtn() {
+		return updateBtn;
+	}
+
+	public void setUpdateBtn(Button updateBtn) {
+		this.updateBtn = updateBtn;
+	}
+
+	public VBox getVbAdmin() {
+		return vbAdmin;
+	}
+
+	public void setVbAdmin(VBox vbAdmin) {
+		this.vbAdmin = vbAdmin;
+	}
+	
 }

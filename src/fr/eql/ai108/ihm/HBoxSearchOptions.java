@@ -43,6 +43,22 @@ public class HBoxSearchOptions extends HBox {
 			}
 		});
 		
+		searchBtn.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+
+				VBoxSearchOptions searchBox = new VBoxSearchOptions();
+				
+				MainPannel root = (MainPannel) getScene().getRoot();
+				
+				searchBox.getTitle().setText("RECHERCHER UN STAGIAIRE");
+				
+				root.setLeft(searchBox);							
+				
+			}
+		});
+		
 		//Ajout de la fonctionnalité création d'un annuaire dans la Hbox -> ouverture d'une fenêtre
 
 		creationbtn.setOnAction(new EventHandler<ActionEvent>() {

@@ -15,7 +15,7 @@ import javafx.scene.control.TextField;
  */
 public class InternProfileDao {
 
-	private String internBDD;
+	private String internBDD ="./internBDD.bin";
 	private final int byteForLeftChild = 0;   			// désigne l'emplacement du 1er byte où est inscrite la position de l'enfant gauche
 	private final int numberOfBytesForLeftChild = 4;	// désigne le nombre de bytes réservés pour inscrire la position de l'enfant gauche
 	private final int byteForRightChild = 4;  			// désigne l'emplacement du 1er byte où est inscrite la position de l'enfant droit
@@ -35,8 +35,7 @@ public class InternProfileDao {
 	 * Pour créer une instance de cette classe, il faut passer en argument dans le constructeur le nom de l'annuaire
 	 * créé précédemment dans la classe CréationAnnuaire
 	 */
-	public InternProfileDao(String internBDD) {
-		this.internBDD = internBDD;
+	public InternProfileDao() {
 	}
 
 	/*
@@ -549,27 +548,27 @@ public class InternProfileDao {
 		List<InternProfile> returnedProfiles = new ArrayList<InternProfile>();
 		
 		for (InternProfile internProfile : internProfiles) {
-			if (surname != null) {
+			if (surname != ".") {
 				if (!internProfile.getSurname().contains(surname.toUpperCase())) {
 					continue;
 				}					
 			}
-			if (firstName != null) {
-				if (!internProfile.getFirstName().contains(firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase())) {
+			if (firstName != "") {
+				if (!internProfile.getFirstName().contains(firstName/*firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase()*/)) {
 					continue;
 				}					
 			}
-			if (county != null) {
+			if (county != "") {
 				if (!internProfile.getCounty().contains(county.toUpperCase())) {
 					continue;
 				}					
 			}
-			if (promotion != null) {
+			if (promotion != "") {
 				if (!internProfile.getPromotion().contains(promotion.toUpperCase())) {
 					continue;
 				}					
 			}
-			if (String.valueOf(studyYear) != null) {
+			if (String.valueOf(studyYear) != "") {
 				if (internProfile.getStudyYear() != (studyYear)) {
 					continue;
 				}				

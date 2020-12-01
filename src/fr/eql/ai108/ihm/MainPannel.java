@@ -1,7 +1,10 @@
 package fr.eql.ai108.ihm;
 
 import java.io.File;
+import java.util.List;
 
+import fr.eql.ai108.model.InternProfile;
+import fr.eql.ai108.model.InternProfileDao;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -28,7 +31,8 @@ public class MainPannel extends BorderPane {
 		//Ajout du TableView
 		File annuaire = new File("./internBDD.bin");
 		if(annuaire.exists()) {
-			tableViewInternProfiles = new TableViewInternProfiles();
+			InternProfileDao dao = new InternProfileDao();
+			tableViewInternProfiles = new TableViewInternProfiles(dao.getAll());
 			setCenter(tableViewInternProfiles);
 		}else {
 			setCenter(lblTV);

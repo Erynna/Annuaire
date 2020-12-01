@@ -18,35 +18,35 @@ public class TableViewInternProfiles extends AnchorPane {
 	private InternProfile internProfile;
 
 	@SuppressWarnings("unchecked")
-	public TableViewInternProfiles() {
+	public TableViewInternProfiles(List<InternProfile> internProfiles) {
 		super();
-
-		InternProfileDao dao = new InternProfileDao("internBDD.bin");
-		ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(dao.getAll());
+	
+		ObservableList<InternProfile> observableProfiles = FXCollections.observableArrayList(internProfiles);
+		
 		TableView<InternProfile> tableView = new TableView<InternProfile>(observableProfiles);
 
-	TableColumn<InternProfile, String> colSurName = new TableColumn<InternProfile, String>("Nom");
-	colSurName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("surname"));
-	TableColumn<InternProfile, String> colFirstName = new TableColumn<InternProfile, String>("Prénom");
-	colFirstName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("firstName"));
-	TableColumn<InternProfile, String> colCounty = new TableColumn<InternProfile, String>("Département");
-	colCounty.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("county"));
-	TableColumn<InternProfile, String> colPromotion = new TableColumn<InternProfile, String>("Promotion");
-	colPromotion.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("promotion"));
-	TableColumn<InternProfile, Integer> colStudyYear = new TableColumn<InternProfile, Integer>("Année");
-	colStudyYear.setCellValueFactory(new PropertyValueFactory<InternProfile, Integer>("studyYear"));
+		TableColumn<InternProfile, String> colSurName = new TableColumn<InternProfile, String>("Nom");
+		colSurName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("surname"));
+		TableColumn<InternProfile, String> colFirstName = new TableColumn<InternProfile, String>("Prénom");
+		colFirstName.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("firstName"));
+		TableColumn<InternProfile, String> colCounty = new TableColumn<InternProfile, String>("Département");
+		colCounty.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("county"));
+		TableColumn<InternProfile, String> colPromotion = new TableColumn<InternProfile, String>("Promotion");
+		colPromotion.setCellValueFactory(new PropertyValueFactory<InternProfile, String>("promotion"));
+		TableColumn<InternProfile, Integer> colStudyYear = new TableColumn<InternProfile, Integer>("Année");
+		colStudyYear.setCellValueFactory(new PropertyValueFactory<InternProfile, Integer>("studyYear"));
 
-	tableView.getColumns().addAll(colSurName, colFirstName, colCounty, colPromotion, colStudyYear);
-	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		tableView.getColumns().addAll(colSurName, colFirstName, colCounty, colPromotion, colStudyYear);
+		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 
-	getChildren().add(tableView);
-	setPrefSize(800, 500);
+		getChildren().add(tableView);
+		setPrefSize(800, 500);
 
-	AnchorPane.setBottomAnchor(tableView, 5.);
-	AnchorPane.setLeftAnchor(tableView, 5.);
-	AnchorPane.setRightAnchor(tableView, 5.);
-	AnchorPane.setTopAnchor(tableView, 5.);
+		AnchorPane.setBottomAnchor(tableView, 5.);
+		AnchorPane.setLeftAnchor(tableView, 5.);
+		AnchorPane.setRightAnchor(tableView, 5.);
+		AnchorPane.setTopAnchor(tableView, 5.);
 	}
 
 	public ObservableList<InternProfile> getObservableProfiles() {
@@ -75,6 +75,3 @@ public class TableViewInternProfiles extends AnchorPane {
 	}
 
 }
-
-
-
