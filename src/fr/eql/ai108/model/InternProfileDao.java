@@ -7,13 +7,15 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.control.TextField;
+
 /*
  * Classe utilitaire qui permet de consulter, ajouter, supprimer, modifier des stagiaires dans le fichier binaire
  * passé en argument dans le constructeur.
  */
 public class InternProfileDao {
 
-	private String internBDD;
+	private String internBDD = "./internBDD.bin";
 	private final int byteForLeftChild = 0;   			// désigne l'emplacement du 1er byte où est inscrite la position de l'enfant gauche
 	private final int numberOfBytesForLeftChild = 4;	// désigne le nombre de bytes réservés pour inscrire la position de l'enfant gauche
 	private final int byteForRightChild = 4;  			// désigne l'emplacement du 1er byte où est inscrite la position de l'enfant droit
@@ -33,8 +35,7 @@ public class InternProfileDao {
 	 * Pour créer une instance de cette classe, il faut passer en argument dans le constructeur le nom de l'annuaire
 	 * créé précédemment dans la classe CréationAnnuaire
 	 */
-	public InternProfileDao(String internBDD) {
-		this.internBDD = internBDD;
+	public InternProfileDao() {
 	}
 
 	/*
@@ -684,3 +685,8 @@ public class InternProfileDao {
 	}
 	
 }
+
+
+	
+	
+
