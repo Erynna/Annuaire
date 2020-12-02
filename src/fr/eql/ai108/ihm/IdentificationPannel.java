@@ -30,6 +30,9 @@ public class IdentificationPannel extends VBox {
 	private Button btnCreationAdmin;
 	private HBox hbButton;
 	private Label error;
+	private Button deleteBtn;
+	private Button updateBtn;
+	private HBox hbAdmin;
 	
 	public IdentificationPannel() {
 		super();
@@ -67,11 +70,11 @@ public class IdentificationPannel extends VBox {
 		setPrefSize(600, 200);
 		
 		//Fonctinnalités administrateurs
-		Button deleteBtn = new Button("Supprimer");
+		deleteBtn = new Button("Supprimer");
 		deleteBtn.setPrefSize(100, 30);
-		Button updateBtn = new Button("MàJ");
+		updateBtn = new Button("MàJ");
 		updateBtn.setPrefSize(100, 30);
-		HBox hbAdmin = new HBox();
+		hbAdmin = new HBox();
 		hbAdmin.getChildren().addAll(deleteBtn, updateBtn);
 		
 		error = new Label("Login et/ou mot de passe incorrect");	
@@ -105,7 +108,6 @@ public class IdentificationPannel extends VBox {
 				}else {
 					getChildren().add(error);
 				}
-
 			}
 		});
 		
@@ -210,5 +212,42 @@ public class IdentificationPannel extends VBox {
 	public void setLabel(Label error) {
 		this.error = error;
 	}
+
+
+
+	public Button getDeleteBtn() {
+		return deleteBtn;
+	}
+
+
+
+	public void setDeleteBtn(Button deleteBtn) {
+		this.deleteBtn = deleteBtn;
+	}
+
+
+
+	public Button getUpdateBtn() {
+		return updateBtn;
+	}
+
+
+
+	public void setUpdateBtn(Button updateBtn) {
+		this.updateBtn = updateBtn;
+	}
+
+
+
+	public HBox getHbAdmin() {
+		return hbAdmin;
+	}
+
+
+
+	public void setHbAdmin(HBox hbAdmin) {
+		this.hbAdmin = hbAdmin;
+	}
+	
 
 }
